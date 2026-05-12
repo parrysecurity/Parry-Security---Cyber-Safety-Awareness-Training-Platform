@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parry Security | Lesson 1 – Phishing & Suspicious Links</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:       #0d9488;
+  --teal-light: #ccfbf1;
+  --teal-mid:   #14b8a6;
+  --navy:       #0f172a;
+  --ink:        #1e293b;
+  --muted:      #64748b;
+  --faint:      #94a3b8;
+  --border:     #e2e8f0;
+  --surface:    #f8fafc;
+  --white:      #ffffff;
+  --red:        #ef4444;
+  --red-light:  #fee2e2;
+  --amber:      #f59e0b;
+  --amber-light:#fef3c7;
+  --green:      #10b981;
+  --green-light:#d1fae5;
+  --indigo:     #6366f1;
+  --indigo-light:#eef2ff;
+  --radius-sm:  8px;
+  --radius-md:  14px;
+  --radius-lg:  22px;
+  --shadow-xs:  0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+  --shadow-sm:  0 4px 16px rgba(15,23,42,.07);
+  --shadow-md:  0 8px 32px rgba(15,23,42,.10);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body {
+  font-family:'Figtree',system-ui,sans-serif;
+  background:var(--surface);
+  color:var(--ink);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* ── TEXTURE BACKGROUND ── */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(13,148,136,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 110%, rgba(99,102,241,.05) 0%, transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+.container { max-width:1140px; margin:0 auto; padding:0 1.5rem; position:relative; z-index:1; }
+
+/* ── HEADER ── */
+.site-header {
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.header-inner {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  padding:.9rem 1.5rem;
+  max-width:1140px;
+  margin:0 auto;
+}
+.logo { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
+.logo-shield {
+  width:40px; height:40px;
+  background:linear-gradient(135deg,var(--teal),var(--navy));
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:1.2rem;
+  animation:shieldPulse 3s ease-in-out infinite;
+}
+@keyframes shieldPulse {
+  0%,100%{ box-shadow:0 0 0 0 rgba(13,148,136,.3); }
+  50%{ box-shadow:0 0 0 8px rgba(13,148,136,0); }
+}
+.logo-text h1 { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:700; color:var(--navy); }
+.logo-text p  { font-size:.68rem; color:var(--muted); }
+
+.header-meta { display:flex; align-items:center; gap:1rem; }
+.lesson-badge {
+  background:var(--teal-light);
+  color:var(--teal);
+  font-size:.72rem; font-weight:600;
+  padding:.3rem .8rem; border-radius:40px;
+}
+.reading-time { font-size:.72rem; color:var(--muted); }
+.user-pill {
+  display:flex; align-items:center; gap:.5rem;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:40px; padding:.25rem .25rem .25rem .25rem;
+}
+.user-avatar {
+  width:30px; height:30px; border-radius:50%;
+  background:linear-gradient(135deg,var(--teal-mid),var(--indigo));
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:.7rem; font-weight:700;
+}
+.user-name { font-size:.78rem; font-weight:600; padding-right:.5rem; }
+.btn-auth {
+  padding:.42rem 1.1rem; border-radius:40px;
+  font-size:.78rem; font-weight:600; cursor:pointer;
+  text-decoration:none; transition:all .25s; border:none;
+}
+.btn-ghost { background:transparent; border:1.5px solid var(--teal); color:var(--teal); }
+.btn-ghost:hover { background:var(--teal); color:#fff; }
+.btn-solid { background:var(--teal); color:#fff; }
+.btn-solid:hover { background:#0f766e; }
+.btn-out { background:transparent; border:1px solid var(--border); color:var(--muted); font-size:.68rem; padding:.22rem .7rem; }
+
+/* ── PROGRESS BAR ── */
+.progress-strip {
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  padding:.7rem 1.5rem;
+}
+.prog-inner { max-width:1140px; margin:0 auto; display:flex; align-items:center; gap:1.2rem; }
+.prog-label { font-size:.72rem; font-weight:600; color:var(--muted); white-space:nowrap; }
+.prog-track { flex:1; background:var(--border); border-radius:20px; height:5px; overflow:hidden; }
+.prog-fill {
+  height:100%; border-radius:20px;
+  background:linear-gradient(90deg,var(--teal),var(--indigo));
+  width:0%; transition:width .8s cubic-bezier(.4,0,.2,1);
+}
+.prog-steps { display:flex; gap:.5rem; }
+.prog-step {
+  font-size:.65rem; font-weight:600; padding:.2rem .55rem;
+  border-radius:20px; background:var(--surface); color:var(--faint);
+  border:1px solid var(--border); transition:all .3s;
+}
+.prog-step.active { background:var(--teal); color:#fff; border-color:var(--teal); }
+.prog-step.done   { background:var(--green-light); color:#065f46; border-color:#a7f3d0; }
+
+/* ── HERO SECTION ── */
+.lesson-hero {
+  padding:3rem 0 2rem;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:2rem;
+  align-items:center;
+}
+@media(max-width:720px){ .lesson-hero{ grid-template-columns:1fr; } }
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:var(--indigo-light); color:var(--indigo);
+  font-size:.72rem; font-weight:600;
+  padding:.3rem .9rem; border-radius:40px; margin-bottom:1rem;
+}
+.hero-title {
+  font-family:'Sora',sans-serif;
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  font-weight:800; color:var(--navy); line-height:1.2;
+  margin-bottom:.8rem;
+}
+.hero-title span { color:var(--teal); }
+.hero-desc { font-size:1rem; color:var(--muted); max-width:520px; margin-bottom:1.5rem; }
+.hero-chips { display:flex; flex-wrap:wrap; gap:.5rem; }
+.chip {
+  font-size:.72rem; font-weight:600;
+  padding:.3rem .8rem; border-radius:20px;
+  display:flex; align-items:center; gap:.35rem;
+}
+.chip-teal   { background:var(--teal-light); color:var(--teal); }
+.chip-amber  { background:var(--amber-light); color:#92400e; }
+.chip-indigo { background:var(--indigo-light); color:var(--indigo); }
+
+.hero-visual {
+  position:relative;
+  width:180px; height:180px;
+  flex-shrink:0;
+}
+.hero-ring {
+  position:absolute; inset:0;
+  border-radius:50%;
+  border:2px solid var(--border);
+  animation:spin 20s linear infinite;
+}
+.hero-ring::before {
+  content:''; position:absolute;
+  top:-2px; left:50%;
+  width:10px; height:10px;
+  background:var(--teal); border-radius:50%;
+  transform:translateX(-50%);
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.hero-ring-2 {
+  position:absolute; inset:20px;
+  border-radius:50%;
+  border:2px dashed #cbd5e1;
+  animation:spin 15s linear infinite reverse;
+}
+.hero-center {
+  position:absolute; inset:35px;
+  background:linear-gradient(135deg,var(--teal),var(--navy));
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.5rem;
+  box-shadow:var(--shadow-md);
+}
+.hero-float {
+  position:absolute;
+  background:var(--white); border-radius:var(--radius-sm);
+  box-shadow:var(--shadow-sm); border:1px solid var(--border);
+  font-size:.65rem; font-weight:600; padding:.3rem .6rem;
+  animation:float 3s ease-in-out infinite;
+}
+.hero-float:nth-child(4){ top:5px; right:-10px; animation-delay:0s; }
+.hero-float:nth-child(5){ bottom:15px; left:-10px; animation-delay:1s; }
+.hero-float:nth-child(6){ top:50%; right:-30px; animation-delay:2s; }
+@keyframes float{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-6px); }
+}
+
+/* ── ANIMATED STATS ── */
+.stats-section { padding:0 0 2rem; }
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1rem; }
+.stat-card {
+  background:var(--white); border:1px solid var(--border);
+  border-radius:var(--radius-md); padding:1.4rem 1.2rem;
+  text-align:center;
+  box-shadow:var(--shadow-xs);
+  transition:transform .3s,box-shadow .3s;
+  animation:fadeUp .6s ease backwards;
+}
+.stat-card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-sm); }
+.stat-icon {
+  width:42px; height:42px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.2rem; margin:0 auto .8rem;
+}
+.stat-icon.teal    { background:var(--teal-light); }
+.stat-icon.red     { background:var(--red-light); }
+.stat-icon.amber   { background:var(--amber-light); }
+.stat-icon.indigo  { background:var(--indigo-light); }
+.stat-num {
+  font-family:'Sora',sans-serif;
+  font-size:1.7rem; font-weight:800; color:var(--navy);
+  line-height:1;
+}
+.stat-lbl { font-size:.72rem; color:var(--muted); margin-top:.35rem; }
+
+/* ── SECTION HEADING ── */
+.section-head {
+  display:flex; align-items:center; gap:.75rem;
+  margin-bottom:1.25rem;
+}
+.section-head-icon {
+  width:36px; height:36px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center; font-size:1rem;
+}
+.section-head h2 {
+  font-family:'Sora',sans-serif; font-size:1.25rem; font-weight:700; color:var(--navy);
+}
+.section-head p { font-size:.8rem; color:var(--muted); margin-top:.1rem; }
+
+/* ── CARDS ── */
+.card {
+  background:var(--white); border:1px solid var(--border);
+  border-radius:var(--radius-lg); padding:1.6rem;
+  box-shadow:var(--shadow-xs);
+  animation:fadeUp .6s ease backwards;
+}
+@keyframes fadeUp{
+  from{ opacity:0; transform:translateY(20px); }
+  to  { opacity:1; transform:translateY(0); }
+}
+
+/* ── MAIN GRID ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem; }
+@media(max-width:800px){ .two-col{ grid-template-columns:1fr; } }
+.full-col { margin-bottom:1.25rem; }
+
+/* ── WARNING LIST ── */
+.warn-list { list-style:none; display:flex; flex-direction:column; gap:.15rem; }
+.warn-item {
+  display:flex; align-items:flex-start; gap:.9rem;
+  padding:.75rem .9rem; border-radius:var(--radius-sm);
+  border:1px solid transparent;
+  cursor:default;
+  transition:background .2s,border-color .2s,transform .2s;
+}
+.warn-item:hover {
+  background:var(--red-light); border-color:#fca5a5;
+  transform:translateX(4px);
+}
+.warn-dot {
+  width:28px; height:28px; min-width:28px;
+  background:var(--red-light); border-radius:7px;
+  display:flex; align-items:center; justify-content:center; font-size:.9rem;
+}
+.warn-txt strong { font-size:.88rem; color:var(--navy); }
+.warn-txt span   { font-size:.76rem; color:var(--muted); display:block; margin-top:.1rem; }
+
+/* ── URL ANALYZER TOOL ── */
+.url-tool { padding:1rem; background:var(--surface); border-radius:var(--radius-md); border:1px solid var(--border); }
+.url-input-row { display:flex; gap:.6rem; }
+.url-input {
+  flex:1; padding:.7rem 1rem; border-radius:var(--radius-sm);
+  border:1.5px solid var(--border); font-size:.88rem;
+  font-family:'Figtree',sans-serif; color:var(--ink);
+  background:var(--white);
+  transition:border-color .2s;
+}
+.url-input:focus { outline:none; border-color:var(--teal); }
+.btn-analyze {
+  background:var(--teal); color:#fff; border:none;
+  padding:.7rem 1.3rem; border-radius:var(--radius-sm);
+  font-size:.85rem; font-weight:600; cursor:pointer;
+  font-family:'Figtree',sans-serif; transition:background .2s;
+  white-space:nowrap;
+}
+.btn-analyze:hover{ background:#0f766e; }
+.url-result {
+  margin-top:.9rem; padding:.9rem 1rem;
+  border-radius:var(--radius-sm); display:none;
+  animation:fadeIn .35s ease;
+}
+.url-result.danger  { background:var(--red-light);   border-left:3px solid var(--red);   }
+.url-result.safe    { background:var(--green-light);  border-left:3px solid var(--green); }
+.url-result.warning { background:var(--amber-light);  border-left:3px solid var(--amber); }
+.result-title { font-weight:700; font-size:.88rem; margin-bottom:.4rem; }
+.result-flags { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.6rem; }
+.result-flag {
+  font-size:.68rem; font-weight:600; padding:.2rem .6rem;
+  border-radius:20px; background:rgba(0,0,0,.06);
+}
+.url-presets { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.7rem; }
+.url-preset {
+  font-size:.7rem; font-weight:600; padding:.25rem .7rem;
+  border-radius:20px; border:1px solid var(--border);
+  background:var(--white); cursor:pointer; color:var(--muted);
+  transition:all .2s;
+}
+.url-preset:hover { border-color:var(--teal); color:var(--teal); }
+
+/* ── TIP CARDS ── */
+.tip-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:.8rem; }
+.tip-card {
+  display:flex; align-items:flex-start; gap:.75rem;
+  padding:.9rem 1rem; border-radius:var(--radius-sm);
+  border:1px solid var(--border); background:var(--surface);
+  transition:all .25s;
+}
+.tip-card:hover { border-color:var(--teal); background:var(--teal-light); transform:translateY(-2px); }
+.tip-icon {
+  width:32px; height:32px; min-width:32px; border-radius:8px;
+  background:var(--teal-light); display:flex; align-items:center; justify-content:center; font-size:1rem;
+}
+.tip-card:hover .tip-icon { background:rgba(13,148,136,.2); }
+.tip-text strong { font-size:.82rem; color:var(--navy); display:block; }
+.tip-text span   { font-size:.72rem; color:var(--muted); }
+
+/* ── SCENARIO FLASHCARDS ── */
+.scenarios-wrap { position:relative; }
+.scenario-cards { display:flex; gap:1rem; overflow:hidden; }
+.scenario-card {
+  flex:0 0 100%; display:none;
+  background:var(--white); border:1px solid var(--border);
+  border-radius:var(--radius-md); padding:1.2rem 1.4rem;
+  box-shadow:var(--shadow-xs);
+}
+.scenario-card.active { display:block; animation:slideIn .4s ease; }
+@keyframes slideIn{
+  from{ opacity:0; transform:translateX(30px); }
+  to  { opacity:1; transform:translateX(0); }
+}
+.scenario-tag {
+  display:inline-flex; align-items:center; gap:.35rem;
+  font-size:.68rem; font-weight:700; padding:.2rem .7rem;
+  border-radius:20px; margin-bottom:.7rem;
+}
+.tag-danger { background:var(--red-light); color:#991b1b; }
+.tag-warn   { background:var(--amber-light); color:#92400e; }
+.scenario-title { font-family:'Sora',sans-serif; font-size:1rem; font-weight:700; margin-bottom:.5rem; }
+.scenario-body  { font-size:.85rem; color:var(--muted); margin-bottom:1rem; }
+.scenario-clues { display:flex; flex-wrap:wrap; gap:.5rem; }
+.clue {
+  font-size:.72rem; padding:.25rem .7rem; border-radius:20px;
+  border:1px solid var(--border); color:var(--ink); background:var(--surface);
+}
+.clue-hit { border-color:#fca5a5; background:var(--red-light); color:#991b1b; }
+.scenario-nav {
+  display:flex; justify-content:space-between; align-items:center; margin-top:1rem;
+}
+.sc-btn {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:.5rem 1rem;
+  font-size:.8rem; font-weight:600; cursor:pointer;
+  transition:all .2s; color:var(--ink);
+}
+.sc-btn:hover { border-color:var(--teal); color:var(--teal); }
+.sc-btn:disabled { opacity:.35; cursor:not-allowed; }
+.sc-dots { display:flex; gap:.4rem; }
+.sc-dot { width:7px; height:7px; border-radius:50%; background:var(--border); transition:background .2s; }
+.sc-dot.active { background:var(--teal); }
+
+/* ── QUIZ ── */
+.quiz-question {
+  font-family:'Sora',sans-serif; font-size:.95rem; font-weight:600;
+  margin-bottom:1rem; color:var(--navy);
+}
+.quiz-options { display:flex; flex-direction:column; gap:.6rem; margin-bottom:1.2rem; }
+.quiz-opt {
+  padding:.85rem 1.1rem; border-radius:var(--radius-sm);
+  border:1.5px solid var(--border); background:var(--white);
+  cursor:pointer; font-size:.88rem; text-align:left;
+  transition:all .2s; font-family:'Figtree',sans-serif;
+  display:flex; align-items:center; gap:.75rem;
+}
+.quiz-opt:hover:not(.answered) { border-color:var(--teal); background:var(--teal-light); }
+.quiz-opt.correct  { border-color:var(--green); background:var(--green-light); }
+.quiz-opt.wrong    { border-color:var(--red);   background:var(--red-light);   }
+.quiz-opt.correct::before { content:'✓'; color:var(--green); font-weight:700; }
+.quiz-opt.wrong::before   { content:'✗'; color:var(--red);   font-weight:700; }
+.quiz-opt::before { content:'○'; color:var(--faint); font-size:1rem; }
+.opt-reveal { display:none; }
+.quiz-feedback {
+  padding:.8rem 1.1rem; border-radius:var(--radius-sm);
+  font-size:.82rem; display:none; animation:fadeIn .3s;
+}
+.quiz-feedback.ok { background:var(--green-light); border-left:3px solid var(--green); }
+.quiz-feedback.ng { background:var(--red-light);   border-left:3px solid var(--red);   }
+.quiz-progress { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
+.quiz-prog-dots { display:flex; gap:.4rem; }
+.quiz-prog-dot { width:8px; height:8px; border-radius:50%; background:var(--border); }
+.quiz-prog-dot.done-ok  { background:var(--green); }
+.quiz-prog-dot.done-ng  { background:var(--red);   }
+.quiz-prog-dot.current  { background:var(--teal); transform:scale(1.3); }
+.quiz-score {
+  text-align:center; padding:1.5rem;
+  background:var(--surface); border-radius:var(--radius-md);
+  border:1px solid var(--border); display:none;
+}
+.quiz-score h3 { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:700; margin-bottom:.4rem; }
+.score-big { font-family:'Sora',sans-serif; font-size:3rem; font-weight:800; color:var(--teal); }
+.btn-quiz-nav {
+  background:var(--navy); color:#fff; border:none;
+  padding:.65rem 1.5rem; border-radius:40px;
+  font-size:.85rem; font-weight:600; cursor:pointer;
+  font-family:'Figtree',sans-serif; margin-top:1rem; transition:background .2s;
+}
+.btn-quiz-nav:hover { background:var(--ink); }
+
+/* ── EMAIL EXERCISE ── */
+.email-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+@media(max-width:660px){ .email-grid-2{ grid-template-columns:1fr; } }
+.email-mock {
+  border:2px solid var(--border); border-radius:var(--radius-md);
+  overflow:hidden; cursor:pointer; transition:all .25s;
+}
+.email-mock:hover { transform:translateY(-3px); box-shadow:var(--shadow-sm); border-color:var(--teal); }
+.email-client-bar {
+  display:flex; gap:.35rem; padding:.5rem .7rem;
+  background:#f1f5f9; border-bottom:1px solid var(--border);
+}
+.client-dot { width:10px; height:10px; border-radius:50%; }
+.email-from { font-size:.7rem; color:var(--muted); padding:.6rem 1rem .3rem; }
+.email-subject { font-size:.88rem; font-weight:700; padding:.1rem 1rem .4rem; color:var(--navy); }
+.email-body-txt { font-size:.8rem; color:var(--muted); padding:.4rem 1rem 1rem; line-height:1.5; }
+.email-link { color:var(--teal); text-decoration:underline; font-size:.78rem; }
+.email-label {
+  padding:.25rem 1rem .7rem; font-size:.68rem; font-weight:700;
+  display:flex; align-items:center; gap:.35rem;
+}
+.ex-feedback {
+  padding:1rem 1.2rem; border-radius:var(--radius-sm); display:none;
+  font-size:.85rem; animation:fadeIn .35s;
+}
+.ex-feedback.ok { background:var(--green-light); border-left:3px solid var(--green); }
+.ex-feedback.ng { background:var(--red-light);   border-left:3px solid var(--red);   }
+.pro-tip {
+  margin-top:1rem; padding:.9rem 1.1rem;
+  background:linear-gradient(135deg,var(--indigo-light),var(--teal-light));
+  border-radius:var(--radius-sm);
+  font-size:.8rem; border:1px solid #c7d2fe;
+}
+
+/* ── GLOSSARY ── */
+.glossary-item { border-bottom:1px solid var(--border); }
+.glossary-term {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:.85rem 0; cursor:pointer; user-select:none;
+}
+.glossary-term strong { font-size:.9rem; color:var(--navy); }
+.gloss-icon { font-size:.8rem; color:var(--faint); transition:transform .3s; }
+.glossary-def {
+  font-size:.82rem; color:var(--muted); line-height:1.6;
+  max-height:0; overflow:hidden; transition:max-height .35s ease, padding .3s;
+  padding-bottom:0;
+}
+.glossary-item.open .glossary-def  { max-height:200px; padding-bottom:.9rem; }
+.glossary-item.open .gloss-icon     { transform:rotate(45deg); color:var(--teal); }
+
+/* ── ACHIEVEMENTS ── */
+.badges-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:.8rem; }
+.badge-item {
+  text-align:center; padding:.9rem .6rem;
+  border-radius:var(--radius-md); border:1px solid var(--border);
+  background:var(--surface);
+  transition:all .3s; cursor:default;
+}
+.badge-item.earned { background:var(--white); border-color:#a7f3d0; box-shadow:var(--shadow-xs); }
+.badge-item.locked { filter:grayscale(1); opacity:.45; }
+.badge-emoji { font-size:2rem; margin-bottom:.4rem; }
+.badge-name { font-size:.72rem; font-weight:700; color:var(--navy); margin-bottom:.15rem; }
+.badge-desc { font-size:.65rem; color:var(--muted); }
+
+/* ── TIP BANNER ── */
+.tip-banner {
+  display:flex; justify-content:space-between; align-items:center;
+  gap:1rem; padding:.8rem 1.3rem;
+  background:linear-gradient(135deg,var(--amber-light),#fef9c3);
+  border:1px solid #fde68a; border-radius:var(--radius-md);
+  margin-bottom:1.5rem; flex-wrap:wrap;
+}
+.tip-banner span { font-size:.84rem; font-weight:500; color:#78350f; }
+.btn-tip-next {
+  background:transparent; border:1.5px solid #d97706;
+  color:#d97706; padding:.25rem .9rem; border-radius:20px;
+  font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s; white-space:nowrap;
+}
+.btn-tip-next:hover { background:#d97706; color:#fff; }
+
+/* ── NAV BUTTONS ── */
+.page-nav {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:1.5rem 0 2rem; gap:1rem; flex-wrap:wrap;
+}
+.btn-reset {
+  background:var(--white); border:1.5px solid var(--border);
+  color:var(--muted); padding:.7rem 1.6rem; border-radius:40px;
+  font-size:.85rem; font-weight:600; cursor:pointer;
+  font-family:'Figtree',sans-serif; transition:all .2s;
+}
+.btn-reset:hover { border-color:var(--red); color:var(--red); }
+.btn-next {
+  background:var(--navy); color:#fff; border:none;
+  padding:.8rem 2rem; border-radius:40px;
+  font-size:.88rem; font-weight:600; cursor:pointer;
+  font-family:'Figtree',sans-serif; transition:all .25s;
+  display:flex; align-items:center; gap:.6rem;
+}
+.btn-next:hover:not(:disabled) { background:var(--ink); transform:translateY(-2px); box-shadow:var(--shadow-sm); }
+.btn-next:disabled { opacity:.4; cursor:not-allowed; }
+.btn-next .arrow { transition:transform .2s; }
+.btn-next:hover:not(:disabled) .arrow { transform:translateX(4px); }
+
+/* ── FOOTER ── */
+footer {
+  background:var(--white); border-top:1px solid var(--border);
+  padding:1.5rem; text-align:center; font-size:.72rem; color:var(--faint);
+}
+
+/* ── ANIMATIONS STAGGER ── */
+@keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+.card:nth-child(1){ animation-delay:.05s }
+.card:nth-child(2){ animation-delay:.1s }
+.card:nth-child(3){ animation-delay:.15s }
+.card:nth-child(4){ animation-delay:.2s }
+.card:nth-child(5){ animation-delay:.25s }
+
+@media(max-width:600px){
+  .header-inner{ flex-wrap:wrap; }
+  .header-meta{ flex-wrap:wrap; gap:.5rem; }
+  .lesson-hero{ padding:1.5rem 0 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <div class="logo-shield">🛡️</div>
+      <div class="logo-text">
+        <h1>Parry Security</h1>
+        <p>Your Digital Shield – Empowering Safe Online Choices</p>
+      </div>
+    </a>
+    <div class="header-meta">
+      <span class="lesson-badge">📘 Module 1</span>
+      <span class="reading-time">⏱ 8 min read</span>
+      <div id="authArea"></div>
+    </div>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-strip">
+  <div class="prog-inner">
+    <span class="prog-label">Progress</span>
+    <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+    <span class="prog-label" id="progPct">0%</span>
+    <div class="prog-steps">
+      <span class="prog-step active" id="st1">L1</span>
+      <span class="prog-step" id="st2">L2</span>
+      <span class="prog-step" id="st3">L3</span>
+      <span class="prog-step" id="st4">L4</span>
+      <span class="prog-step" id="st5">L5</span>
+      <span class="prog-step" id="st6">L6</span>
+      <span class="prog-step" id="stQ">Quiz</span>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding-top:0">
+
+<!-- HERO -->
+<div class="lesson-hero">
+  <div>
+    <div class="hero-eyebrow">🎯 Lesson 1 of 6</div>
+    <h1 class="hero-title">Phishing &<br><span>Suspicious Links</span></h1>
+    <p class="hero-desc">Learn how cybercriminals impersonate trusted brands to steal credentials, and master the techniques to spot and stop them before it's too late.</p>
+    <div class="hero-chips">
+      <span class="chip chip-teal">🧠 Beginner Friendly</span>
+      <span class="chip chip-amber">⚡ High-Priority Threat</span>
+      <span class="chip chip-indigo">🏆 3 Achievements</span>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-ring"></div>
+    <div class="hero-ring-2"></div>
+    <div class="hero-center">🛡️</div>
+    <div class="hero-float">🔐 Secure</div>
+    <div class="hero-float">⚠️ Threat</div>
+    <div class="hero-float">✅ Verified</div>
+  </div>
+</div>
+
+<!-- TIP BANNER -->
+<div class="tip-banner">
+  <span id="tipText">💡 Never share your OTP — your bank will NEVER ask for it over email or SMS.</span>
+  <button class="btn-tip-next" id="tipNext">Next Tip →</button>
+</div>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-card" style="animation-delay:.0s">
+      <div class="stat-icon teal">📧</div>
+      <div class="stat-num" data-target="3400000000" data-suffix="+" data-abbr>3.4B+</div>
+      <div class="stat-lbl">Phishing emails sent daily</div>
+    </div>
+    <div class="stat-card" style="animation-delay:.1s">
+      <div class="stat-icon red">🏢</div>
+      <div class="stat-num" data-counter="76" data-suffix="%">0%</div>
+      <div class="stat-lbl">Businesses targeted yearly</div>
+    </div>
+    <div class="stat-card" style="animation-delay:.2s">
+      <div class="stat-icon amber">💸</div>
+      <div class="stat-num" data-counter="17700" data-prefix="$" data-abbr2>$0</div>
+      <div class="stat-lbl">Lost to phishing per minute</div>
+    </div>
+    <div class="stat-card" style="animation-delay:.3s">
+      <div class="stat-icon indigo">⏱️</div>
+      <div class="stat-num" data-counter="82" data-suffix="s">0s</div>
+      <div class="stat-lbl">Average victim response time</div>
+    </div>
+  </div>
+</div>
+
+<!-- LESSON GRID ROW 1 -->
+<div class="two-col">
+
+  <!-- What is Phishing? -->
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--indigo-light)">📖</div>
+      <div>
+        <h2>What is Phishing?</h2>
+        <p>Core concept & how attacks work</p>
+      </div>
+    </div>
+    <p style="font-size:.88rem; color:var(--muted); margin-bottom:1rem;">
+      Phishing is a social engineering attack where criminals impersonate legitimate organisations via email, SMS, or fake websites to steal sensitive information — passwords, credit card numbers, or install malware on your device.
+    </p>
+    <p style="font-size:.88rem; color:var(--muted); margin-bottom:1rem;">
+      The term comes from "fishing" — casting a wide bait hoping someone bites. Modern phishing uses personalised <em>spear-phishing</em> targeting specific individuals or companies.
+    </p>
+    <div style="background:var(--red-light); border-radius:var(--radius-sm); padding:1rem; border-left:3px solid var(--red);">
+      <strong style="font-size:.82rem; color:#991b1b;">🚨 Real Incident: 2023 Healthcare Breach</strong>
+      <p style="font-size:.78rem; color:#7f1d1d; margin-top:.4rem;">
+        A major healthcare provider lost <strong>$7.5 million</strong> after an employee clicked a phishing invoice link. Attackers gained system access within 90 minutes and exfiltrated patient records for 3 months before discovery.
+      </p>
+    </div>
+  </div>
+
+  <!-- Warning Signs -->
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--red-light)">⚠️</div>
+      <div>
+        <h2>Red Flag Checklist</h2>
+        <p>Hover each sign to learn more</p>
+      </div>
+    </div>
+    <ul class="warn-list">
+      <li class="warn-item">
+        <div class="warn-dot">🚨</div>
+        <div class="warn-txt">
+          <strong>Urgent / threatening language</strong>
+          <span>"Your account will be suspended TODAY!" — creates panic to bypass logic</span>
+        </div>
+      </li>
+      <li class="warn-item">
+        <div class="warn-dot">🔗</div>
+        <div class="warn-txt">
+          <strong>Mismatched sender / URL</strong>
+          <span>"paypa1.com" vs "paypal.com" — one character off</span>
+        </div>
+      </li>
+      <li class="warn-item">
+        <div class="warn-dot">👤</div>
+        <div class="warn-txt">
+          <strong>Generic salutation</strong>
+          <span>"Dear Customer" instead of your actual name</span>
+        </div>
+      </li>
+      <li class="warn-item">
+        <div class="warn-dot">✏️</div>
+        <div class="warn-txt">
+          <strong>Grammar & spelling errors</strong>
+          <span>Legitimate companies proofread; scammers often don't</span>
+        </div>
+      </li>
+      <li class="warn-item">
+        <div class="warn-dot">📎</div>
+        <div class="warn-txt">
+          <strong>Unexpected attachments</strong>
+          <span>Fake invoices, receipts, or "important documents"</span>
+        </div>
+      </li>
+      <li class="warn-item">
+        <div class="warn-dot">🔑</div>
+        <div class="warn-txt">
+          <strong>Requests for credentials</strong>
+          <span>No legitimate service emails you asking for your password</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- URL ANALYZER + PROTECTION TIPS -->
+<div class="two-col">
+
+  <!-- URL Analyzer -->
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--teal-light)">🔍</div>
+      <div>
+        <h2>URL Safety Analyzer</h2>
+        <p>Test a link before you click it</p>
+      </div>
+    </div>
+    <div class="url-tool">
+      <div class="url-input-row">
+        <input class="url-input" type="text" id="urlInput" placeholder="Paste a URL here e.g. paypa1.com/verify">
+        <button class="btn-analyze" id="analyzeBtn">Analyze →</button>
+      </div>
+      <div class="url-presets">
+        <span style="font-size:.68rem; color:var(--muted); align-self:center">Try:</span>
+        <button class="url-preset" data-url="paypa1.com/verify/urgent">paypa1.com</button>
+        <button class="url-preset" data-url="paypal.com/login">paypal.com</button>
+        <button class="url-preset" data-url="amazon-security-alert.tk">amazon-alert.tk</button>
+        <button class="url-preset" data-url="g00gle.com/accounts">g00gle.com</button>
+        <button class="url-preset" data-url="linkedin.com/in/profile">linkedin.com</button>
+        <button class="url-preset" data-url="free-iphone-winner.xyz/claim">free-iphone.xyz</button>
+      </div>
+      <div class="url-result" id="urlResult">
+        <div class="result-title" id="resultTitle"></div>
+        <div id="resultBody" style="font-size:.8rem"></div>
+        <div class="result-flags" id="resultFlags"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Protection Tips -->
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--green-light)">✅</div>
+      <div>
+        <h2>How to Stay Protected</h2>
+        <p>Action steps you can take today</p>
+      </div>
+    </div>
+    <div class="tip-grid">
+      <div class="tip-card">
+        <div class="tip-icon">🖱️</div>
+        <div class="tip-text">
+          <strong>Hover before you click</strong>
+          <span>See the real destination URL in your browser's status bar</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📬</div>
+        <div class="tip-text">
+          <strong>Check sender address</strong>
+          <span>Not just the display name — read the full email address</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🌐</div>
+        <div class="tip-text">
+          <strong>Type URLs directly</strong>
+          <span>Go to websites by typing the address, not clicking links</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🔐</div>
+        <div class="tip-text">
+          <strong>Enable 2FA everywhere</strong>
+          <span>Even stolen passwords won't work without the second factor</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🗝️</div>
+        <div class="tip-text">
+          <strong>Use a password manager</strong>
+          <span>It won't autofill on fake sites — a built-in safety check</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📞</div>
+        <div class="tip-text">
+          <strong>Verify by calling</strong>
+          <span>If unsure, call the company directly using a known number</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REAL-WORLD SCENARIOS -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--amber-light)">🎭</div>
+      <div>
+        <h2>Real-World Phishing Scenarios</h2>
+        <p>Learn from actual attack patterns — spot the red flags</p>
+      </div>
+    </div>
+    <div class="scenarios-wrap">
+      <div class="scenario-cards" id="scenarioCards">
+
+        <div class="scenario-card active">
+          <span class="scenario-tag tag-danger">🎣 Email Phishing</span>
+          <h3 class="scenario-title">The Fake Bank Alert</h3>
+          <p class="scenario-body">You receive an email from "security@citibank-alert.com" saying "Unusual login detected from Moscow. Verify your identity within 24 hours or your account will be locked." There's a blue "Secure Verify" button inside.</p>
+          <div class="scenario-clues">
+            <span class="clue clue-hit">🔴 Domain: citibank-alert.com (not citibank.com)</span>
+            <span class="clue clue-hit">🔴 Urgent 24-hour deadline</span>
+            <span class="clue clue-hit">🔴 Suspicious geographic detail</span>
+            <span class="clue">✅ What to do: Log in via citibank.com directly</span>
+          </div>
+        </div>
+
+        <div class="scenario-card">
+          <span class="scenario-tag tag-warn">📱 SMS Smishing</span>
+          <h3 class="scenario-title">Fake Parcel Delivery</h3>
+          <p class="scenario-body">You get an SMS: "Royal Mail: Your parcel is held. Pay £1.99 customs fee to release it. Click: royalmail-delivery.info/pay" — Even if you're expecting a package, this is a trap.</p>
+          <div class="scenario-clues">
+            <span class="clue clue-hit">🔴 Domain: royalmail-delivery.info (not royalmail.com)</span>
+            <span class="clue clue-hit">🔴 Small fee to steal card details</span>
+            <span class="clue clue-hit">🔴 SMS from unknown number</span>
+            <span class="clue">✅ Check via official Royal Mail tracking portal</span>
+          </div>
+        </div>
+
+        <div class="scenario-card">
+          <span class="scenario-tag tag-danger">🎁 Prize Phishing</span>
+          <h3 class="scenario-title">The Prize Winner Trap</h3>
+          <p class="scenario-body">An email arrives: "Congratulations! You've been selected for a £500 Amazon Gift Card. You're the 1,000,000th visitor! Claim your reward now — expires in 1 hour!" Complete with a spinning wheel graphic.</p>
+          <div class="scenario-clues">
+            <span class="clue clue-hit">🔴 "1,000,000th visitor" is always fake</span>
+            <span class="clue clue-hit">🔴 Artificial scarcity (1-hour expiry)</span>
+            <span class="clue clue-hit">🔴 Unsolicited reward you never entered</span>
+            <span class="clue">✅ Delete immediately, never claim unsolicited prizes</span>
+          </div>
+        </div>
+
+        <div class="scenario-card">
+          <span class="scenario-tag tag-warn">🏢 Spear Phishing</span>
+          <h3 class="scenario-title">The CEO Impersonation</h3>
+          <p class="scenario-body">Your company's "CEO" emails from ceo@company-corp.net asking you to urgently wire £15,000 to a supplier account for a confidential deal. They ask you to keep it quiet from your manager.</p>
+          <div class="scenario-clues">
+            <span class="clue clue-hit">🔴 Domain: company-corp.net vs company.com</span>
+            <span class="clue clue-hit">🔴 "Keep it quiet" — secrecy request</span>
+            <span class="clue clue-hit">🔴 Urgency around money transfer</span>
+            <span class="clue">✅ Always verify wire requests via phone using known numbers</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="scenario-nav">
+        <button class="sc-btn" id="scPrev" disabled>← Prev</button>
+        <div class="sc-dots" id="scDots"></div>
+        <button class="sc-btn" id="scNext">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KNOWLEDGE QUIZ -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--indigo-light)">🧩</div>
+      <div>
+        <h2>Knowledge Check</h2>
+        <p>Test what you've learned — 4 questions</p>
+      </div>
+    </div>
+    <div id="quizArea">
+      <div class="quiz-progress">
+        <div class="quiz-prog-dots" id="quizDots"></div>
+        <span id="quizCounter" style="font-size:.76rem; color:var(--muted)">Question 1 of 4</span>
+      </div>
+      <div class="quiz-question" id="quizQ"></div>
+      <div class="quiz-options" id="quizOpts"></div>
+      <div class="quiz-feedback" id="quizFb"></div>
+      <button class="btn-quiz-nav" id="quizNextBtn" style="display:none"></button>
+    </div>
+    <div class="quiz-score" id="quizScore">
+      <div class="score-big" id="scoreBig"></div>
+      <h3 id="scoreTitle"></h3>
+      <p id="scoreDesc" style="font-size:.85rem; color:var(--muted); margin:.5rem 0 1rem"></p>
+      <button class="btn-quiz-nav" id="retryBtn">↩ Retry Quiz</button>
+    </div>
+  </div>
+</div>
+
+<!-- INTERACTIVE EMAIL EXERCISE -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--red-light)">🎯</div>
+      <div>
+        <h2>Spot the Phishing Email</h2>
+        <p>Click the email you think is a scam</p>
+      </div>
+    </div>
+    <div class="email-grid-2">
+
+      <!-- Phishing Email -->
+      <div class="email-mock" id="eScam">
+        <div class="email-client-bar">
+          <div class="client-dot" style="background:#ef4444"></div>
+          <div class="client-dot" style="background:#f59e0b"></div>
+          <div class="client-dot" style="background:#10b981"></div>
+        </div>
+        <div class="email-from">From: <strong>security@paypa1.com</strong></div>
+        <div class="email-subject">⚠️ Your account has been LIMITED!</div>
+        <div class="email-body-txt">
+          Dear User,<br><br>
+          We detected suspicious activity on your account. Your access will be <strong>permanently restricted</strong> unless you verify now.<br><br>
+          <span class="email-link">http://paypa1.com/verify/urgent?token=928ak</span>
+        </div>
+        <div class="email-label" style="color:#991b1b">
+          <span>⚠️</span> Flagged: Urgent threat language
+        </div>
+      </div>
+
+      <!-- Legit Email -->
+      <div class="email-mock" id="eLegit">
+        <div class="email-client-bar">
+          <div class="client-dot" style="background:#ef4444"></div>
+          <div class="client-dot" style="background:#f59e0b"></div>
+          <div class="client-dot" style="background:#10b981"></div>
+        </div>
+        <div class="email-from">From: <strong>notifications@linkedin.com</strong></div>
+        <div class="email-subject">Sarah Johnson wants to connect</div>
+        <div class="email-body-txt">
+          Hi Alex,<br><br>
+          Sarah Johnson (Product Designer at Acme Corp) would like to connect with you on LinkedIn.<br><br>
+          <span class="email-link" style="color:#0a66c2">View Sarah's profile →</span>
+        </div>
+        <div class="email-label" style="color:#065f46">
+          <span>✅</span> Looks legitimate
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-feedback" id="exFeedback"></div>
+
+    <div class="pro-tip">
+      <strong>📚 Pro Tip:</strong> Password managers auto-fill only on the real domain. If you're on <em>paypa1.com</em>, your manager won't fill in your PayPal credentials — a natural phishing detector built right into your browser.
+    </div>
+  </div>
+</div>
+
+<!-- GLOSSARY -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--surface)">📚</div>
+      <div>
+        <h2>Glossary of Terms</h2>
+        <p>Key concepts explained — click to expand</p>
+      </div>
+    </div>
+    <div id="glossary">
+      <div class="glossary-item"><div class="glossary-term"><strong>Phishing</strong><span class="gloss-icon">+</span></div><div class="glossary-def">A cyberattack where criminals send fraudulent messages impersonating legitimate organisations to trick users into revealing sensitive information like passwords or credit card numbers.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Spear Phishing</strong><span class="gloss-icon">+</span></div><div class="glossary-def">A targeted form of phishing directed at a specific individual or organisation. Attackers research their target using LinkedIn, company websites, or social media to craft convincing personalised messages.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Smishing (SMS Phishing)</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Phishing conducted via text message / SMS. Often disguised as parcel delivery notifications, bank alerts, or prize winnings with malicious links embedded.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Vishing (Voice Phishing)</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Phone-based phishing where attackers call victims pretending to be tech support, bank agents, or government officials to extract sensitive information verbally.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>URL Spoofing / Typosquatting</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Registering domains that closely mimic real ones — e.g. "paypa1.com" or "arnazon.com" — to deceive users who don't carefully read the address bar.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Two-Factor Authentication (2FA)</strong><span class="gloss-icon">+</span></div><div class="glossary-def">A security layer requiring two forms of verification: something you know (password) and something you have (a code sent to your phone or an authenticator app). Massively reduces account takeover risk.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Social Engineering</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Psychological manipulation of people into divulging confidential information. Phishing is the most common form, but social engineering also includes pretexting, baiting, and quid pro quo attacks.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--amber-light)">🏆</div>
+      <div>
+        <h2>Achievements</h2>
+        <p>Unlock badges as you progress through the lesson</p>
+      </div>
+    </div>
+    <div class="badges-grid" id="badgesGrid">
+      <div class="badge-item locked" id="badge1">
+        <div class="badge-emoji">🎯</div>
+        <div class="badge-name">Phish Spotter</div>
+        <div class="badge-desc">Complete the email exercise</div>
+      </div>
+      <div class="badge-item locked" id="badge2">
+        <div class="badge-emoji">🧩</div>
+        <div class="badge-name">Quiz Master</div>
+        <div class="badge-desc">Score 3/4 or above in the quiz</div>
+      </div>
+      <div class="badge-item locked" id="badge3">
+        <div class="badge-emoji">🔍</div>
+        <div class="badge-name">URL Detective</div>
+        <div class="badge-desc">Analyze 3+ URLs with the tool</div>
+      </div>
+      <div class="badge-item locked" id="badge4">
+        <div class="badge-emoji">📖</div>
+        <div class="badge-name">Scenario Sleuth</div>
+        <div class="badge-desc">Read all 4 phishing scenarios</div>
+      </div>
+      <div class="badge-item locked" id="badge5">
+        <div class="badge-emoji">🛡️</div>
+        <div class="badge-name">Lesson Champion</div>
+        <div class="badge-desc">Complete Lesson 1 fully</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE NAV -->
+<div class="page-nav">
+  <button class="btn-reset" id="resetBtn">↺ Reset Lesson</button>
+  <button class="btn-next" id="nextBtn" disabled>
+    Next: Social Engineering <span class="arrow">→</span>
+  </button>
+</div>
+
+</div><!-- /container -->
+
+<footer>🛡️ Parry Security – Cyber Safety Training &nbsp;|&nbsp; Lesson 1: Phishing & Suspicious Links &nbsp;|&nbsp; Stay safe online.</footer>
+
+<script>
+/* ── STATE ── */
+const state = {
+  lesson1Done: false,
+  exerciseDone: false,
+  quizScore: 0,
+  quizDone: false,
+  urlCount: 0,
+  scenarioMax: 0,
+  badgesEarned: []
+};
+
+/* ── AUTH ── */
+function renderAuth(){
+  const el = document.getElementById('authArea');
+  const u  = (() => { try{ return JSON.parse(localStorage.getItem('parryCurrentUser')); } catch(e){ return null; } })();
+  if(u){
+    const n = u.fullName.split(' ')[0];
+    el.innerHTML = `<div class="user-pill"><div class="user-avatar">${n[0].toUpperCase()}</div><span class="user-name">${n}</span><button class="btn-auth btn-out" onclick="doLogout()">Logout</button></div>`;
+  } else {
+    el.innerHTML = `<a href="login.html" class="btn-auth btn-ghost">Login</a><a href="index.html" class="btn-auth btn-solid">Sign Up</a>`;
+  }
+}
+function doLogout(){
+  localStorage.removeItem('parryCurrentUser');
+  location.reload();
+}
+
+/* ── STATS COUNTER ── */
+function animateCounters(){
+  document.querySelectorAll('[data-counter]').forEach(el => {
+    const target = +el.dataset.counter;
+    const suffix = el.dataset.suffix || '';
+    const prefix = el.dataset.prefix || '';
+    let start = 0;
+    const dur = 1800;
+    const step = 16;
+    const inc  = target / (dur / step);
+    const timer = setInterval(() => {
+      start = Math.min(start + inc, target);
+      el.textContent = prefix + Math.round(start).toLocaleString() + suffix;
+      if(start >= target) clearInterval(timer);
+    }, step);
+  });
+}
+
+/* ── TIPS BANNER ── */
+const tips = [
+  '💡 Never share your OTP — your bank will NEVER ask for it.',
+  '💡 Hover over links before clicking to preview the real URL.',
+  '💡 When in doubt, type the website address manually.',
+  '💡 Enable 2FA on every account that supports it.',
+  '💡 A password manager won\'t autofill on fake sites — use it!',
+  '💡 "Urgent" language in emails is almost always a manipulation tactic.',
+  '💡 Legitimate companies never email asking for your password.',
+];
+let tipI = 0;
+function nextTip(){
+  tipI = (tipI + 1) % tips.length;
+  const el = document.getElementById('tipText');
+  el.style.opacity = 0;
+  setTimeout(() => { el.textContent = tips[tipI]; el.style.opacity = 1; }, 250);
+}
+document.getElementById('tipNext').addEventListener('click', nextTip);
+document.getElementById('tipText').style.transition = 'opacity .25s';
+setInterval(nextTip, 9000);
+
+/* ── URL ANALYZER ── */
+const urlRules = [
+  { pattern: /paypa1|g00gle|arnazon|micros0ft|netfl1x|app1e|faceb00k/, verdict:'danger', title:'🚨 High Risk – Typosquatting Detected', body:'This URL uses character substitution (like "1" for "l" or "0" for "o") to impersonate a well-known brand.', flags:['Typosquatting','Brand impersonation','Do NOT visit'] },
+  { pattern: /\.(tk|xyz|info|biz|cc|pw|click|loan|site|online)\b/, verdict:'danger', title:'🚨 High Risk – Suspicious TLD', body:'This top-level domain (.tk, .xyz, etc.) is commonly used in phishing campaigns due to low registration cost.', flags:['Suspicious TLD','Common phishing domain','Treat with caution'] },
+  { pattern: /(-security|-alert|-verify|-urgent|-update|-confirm|secure-|-online)/, verdict:'danger', title:'🚨 High Risk – Suspicious Subdomain Pattern', body:'Legitimate banks and services do not use urgency keywords like "alert", "verify", or "urgent" in their domain names.', flags:['Urgency keyword in URL','Deceptive structure','Likely phishing'] },
+  { pattern: /^(paypal|linkedin|google|amazon|microsoft|apple|netflix|facebook|twitter|instagram)\.(com|co\.uk)/, verdict:'safe', title:'✅ Appears Legitimate – Recognised Domain', body:'This domain matches a well-known brand. Still verify you are using HTTPS and there are no subdomains before the brand name.', flags:['Known brand domain','No typosquatting detected','Verify HTTPS'] },
+  { pattern: /free|winner|prize|claim|gift|reward/, verdict:'danger', title:'🚨 High Risk – Prize/Reward Phishing Pattern', body:'URLs containing words like "free", "prize", "winner", or "gift" are extremely common in phishing and scam campaigns.', flags:['Reward bait language','Social engineering','Almost always a scam'] },
+];
+
+let urlAnalyzeCount = 0;
+function analyzeURL(){
+  const raw = document.getElementById('urlInput').value.trim().toLowerCase();
+  if(!raw){ return; }
+  const res = document.getElementById('urlResult');
+  let matched = null;
+  for(const r of urlRules){ if(r.pattern.test(raw)){ matched = r; break; } }
+  if(!matched){ matched = { verdict:'warning', title:'⚠️ Unknown / Unverified URL', body:'This URL could not be matched to a known safe or dangerous pattern. When in doubt, do not click it — type the address directly instead.', flags:['Unknown domain','No match found','Exercise caution'] }; }
+  res.className = 'url-result ' + matched.verdict;
+  res.style.display = 'block';
+  document.getElementById('resultTitle').textContent = matched.title;
+  document.getElementById('resultBody').textContent  = matched.body;
+  const flagsEl = document.getElementById('resultFlags');
+  flagsEl.innerHTML = matched.flags.map(f => `<span class="result-flag">${f}</span>`).join('');
+  urlAnalyzeCount++;
+  if(urlAnalyzeCount >= 3){ earnBadge('badge3'); }
+}
+document.getElementById('analyzeBtn').addEventListener('click', analyzeURL);
+document.getElementById('urlInput').addEventListener('keydown', e => { if(e.key === 'Enter') analyzeURL(); });
+document.querySelectorAll('.url-preset').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('urlInput').value = btn.dataset.url;
+    analyzeURL();
+  });
+});
+
+/* ── SCENARIOS ── */
+const scenarioEls = document.querySelectorAll('.scenario-card');
+const scTotal = scenarioEls.length;
+let scIdx = 0;
+const dotsEl = document.getElementById('scDots');
+for(let i=0;i<scTotal;i++){ const d = document.createElement('div'); d.className = 'sc-dot' + (i===0?' active':''); dotsEl.appendChild(d); }
+function showScenario(n){
+  scenarioEls.forEach((el,i) => { el.classList.toggle('active', i===n); });
+  dotsEl.querySelectorAll('.sc-dot').forEach((d,i) => d.classList.toggle('active', i===n));
+  document.getElementById('scPrev').disabled = n===0;
+  document.getElementById('scNext').disabled = n===scTotal-1;
+  state.scenarioMax = Math.max(state.scenarioMax, n);
+  if(state.scenarioMax >= scTotal-1){ earnBadge('badge4'); }
+}
+document.getElementById('scPrev').addEventListener('click', () => { if(scIdx>0){ scIdx--; showScenario(scIdx); } });
+document.getElementById('scNext').addEventListener('click', () => { if(scIdx<scTotal-1){ scIdx++; showScenario(scIdx); } });
+
+/* ── QUIZ ── */
+const questions = [
+  {
+    q:'Which of the following is the STRONGEST indicator that an email is a phishing attempt?',
+    opts:['The email contains your full name','The sender address uses a misspelled domain (e.g. "paypa1.com")','The email contains an HTML logo','The email was sent on a weekend'],
+    answer:1,
+    explanation:'Typosquatted domains (e.g. paypa1.com) are the clearest technical red flag. Attackers use these because they\'re visually similar to the real domain.'
+  },
+  {
+    q:'You receive an SMS from "Amazon" asking you to pay £1.49 to release a held parcel. What should you do?',
+    opts:['Pay the fee — it\'s only a small amount','Click the link to investigate the situation','Go directly to amazon.com and check your orders','Forward the SMS to a friend to get their opinion'],
+    answer:2,
+    explanation:'Always navigate to the official website directly. Never click links from unsolicited messages, regardless of the amount involved — it\'s the card details they\'re after.'
+  },
+  {
+    q:'A password manager is a useful phishing defence because:',
+    opts:['It remembers your password so you don\'t have to','It encrypts all your internet traffic','It won\'t autofill credentials on fake/spoofed domains','It blocks malware from being downloaded'],
+    answer:2,
+    explanation:'Password managers autofill only on the exact domain they saved credentials for. On paypa1.com, your PayPal credentials won\'t fill — alerting you that something is wrong.'
+  },
+  {
+    q:'Which attack type involves a criminal calling you pretending to be your bank\'s fraud department?',
+    opts:['Smishing','Spear Phishing','Vishing','Pretexting'],
+    answer:2,
+    explanation:'Vishing is voice-based phishing conducted over phone calls. Attackers create a sense of urgency and authority, often asking for OTPs or card numbers to "protect your account".'
+  }
+];
+
+let qIdx = 0;
+let qResults = [];
+let answered = false;
+
+function renderQuizDots(){
+  const el = document.getElementById('quizDots');
+  el.innerHTML = '';
+  questions.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'quiz-prog-dot';
+    if(i < qResults.length){ d.className += qResults[i] ? ' done-ok' : ' done-ng'; }
+    else if(i === qIdx){ d.className += ' current'; }
+    el.appendChild(d);
+  });
+}
+
+function renderQuestion(){
+  const q = questions[qIdx];
+  document.getElementById('quizCounter').textContent = `Question ${qIdx+1} of ${questions.length}`;
+  document.getElementById('quizQ').textContent = q.q;
+  const optsEl = document.getElementById('quizOpts');
+  optsEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => checkAnswer(i));
+    optsEl.appendChild(btn);
+  });
+  document.getElementById('quizFb').style.display = 'none';
+  document.getElementById('quizNextBtn').style.display = 'none';
+  answered = false;
+  renderQuizDots();
+}
+
+function checkAnswer(i){
+  if(answered) return;
+  answered = true;
+  const q = questions[qIdx];
+  const opts = document.querySelectorAll('.quiz-opt');
+  const correct = i === q.answer;
+  opts.forEach((o,idx) => {
+    o.classList.add('answered');
+    if(idx === q.answer) o.classList.add('correct');
+    else if(idx === i && !correct) o.classList.add('wrong');
+  });
+  const fb = document.getElementById('quizFb');
+  fb.style.display = 'block';
+  fb.className = 'quiz-feedback ' + (correct ? 'ok' : 'ng');
+  fb.innerHTML = `<strong>${correct ? '✅ Correct!' : '❌ Incorrect.'}</strong> ${q.explanation}`;
+  if(correct) state.quizScore++;
+  qResults.push(correct);
+  renderQuizDots();
+  const nb = document.getElementById('quizNextBtn');
+  nb.style.display = 'block';
+  nb.textContent = qIdx < questions.length-1 ? 'Next Question →' : 'See My Score →';
+}
+
+document.getElementById('quizNextBtn').addEventListener('click', () => {
+  qIdx++;
+  if(qIdx < questions.length){ renderQuestion(); }
+  else { showScore(); }
+});
+
+function showScore(){
+  document.getElementById('quizArea').style.display = 'none';
+  const scoreEl = document.getElementById('quizScore');
+  scoreEl.style.display = 'block';
+  const sc = state.quizScore;
+  document.getElementById('scoreBig').textContent = `${sc}/${questions.length}`;
+  const titles = ['Keep Studying!','Good Effort!','Well Done!','Security Expert! 🏆'];
+  const descs  = [
+    'Review the lesson content and try again — phishing awareness takes practice.',
+    'You got some right! Re-read the glossary and scenarios, then retry.',
+    'Great job! You have solid phishing awareness. Try the next lesson.',
+    'Perfect score! You\'re ready to defend against phishing threats.'
+  ];
+  document.getElementById('scoreTitle').textContent = titles[sc] || 'Well Done!';
+  document.getElementById('scoreDesc').textContent  = descs[sc]  || '';
+  state.quizDone = true;
+  if(sc >= 3){ earnBadge('badge2'); }
+  checkLessonComplete();
+}
+
+document.getElementById('retryBtn').addEventListener('click', () => {
+  qIdx = 0; qResults = []; state.quizScore = 0; answered = false;
+  document.getElementById('quizScore').style.display = 'none';
+  document.getElementById('quizArea').style.display  = 'block';
+  renderQuestion();
+});
+
+/* ── EMAIL EXERCISE ── */
+document.getElementById('eScam').addEventListener('click', () => {
+  const fb = document.getElementById('exFeedback');
+  fb.style.display = 'block';
+  fb.className = 'ex-feedback ok';
+  fb.innerHTML = '<strong>✅ Correct!</strong> Email A is a phishing scam.<br><br>🔍 <strong>Red flags:</strong> The sender is "security@paypa1.com" (not paypal.com), the subject uses ALL CAPS urgency, the body uses threatening language ("permanently restricted"), and the link URL is paypa1.com — a typosquatted fake.';
+  document.getElementById('eScam').style.borderColor = 'var(--green)';
+  earnBadge('badge1');
+  completeLesson();
+});
+document.getElementById('eLegit').addEventListener('click', () => {
+  const fb = document.getElementById('exFeedback');
+  fb.style.display = 'block';
+  fb.className = 'ex-feedback ng';
+  fb.innerHTML = '<strong>❌ Incorrect.</strong> Email B is a legitimate LinkedIn notification.<br><br>🔍 Check the other email — look for the mismatched sender domain and urgent threatening language.';
+  document.getElementById('eLegit').style.borderColor = 'var(--red)';
+  setTimeout(() => { document.getElementById('eLegit').style.borderColor = 'var(--border)'; }, 1800);
+});
+
+/* ── GLOSSARY ── */
+document.querySelectorAll('.glossary-term').forEach(term => {
+  term.addEventListener('click', () => {
+    const item = term.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.glossary-item').forEach(i => i.classList.remove('open'));
+    if(!wasOpen) item.classList.add('open');
+  });
+});
+
+/* ── ACHIEVEMENTS ── */
+function earnBadge(id){
+  if(state.badgesEarned.includes(id)) return;
+  state.badgesEarned.push(id);
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.classList.remove('locked');
+  el.classList.add('earned');
+  el.animate([{transform:'scale(1)'},{transform:'scale(1.2)'},{transform:'scale(1)'}], {duration:400, easing:'ease'});
+  if(state.badgesEarned.length >= 5){ earnBadge('badge5'); }
+  localStorage.setItem('parryBadges', JSON.stringify(state.badgesEarned));
+}
+
+/* ── PROGRESS ── */
+function updateProgress(pct, done){
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progPct').textContent  = pct + '%';
+  if(done){
+    const s1 = document.getElementById('st1');
+    s1.textContent = '✓ L1';
+    s1.classList.remove('active'); s1.classList.add('done');
+    document.getElementById('nextBtn').disabled = false;
+    earnBadge('badge5');
+  }
+}
+
+function checkLessonComplete(){
+  if(state.exerciseDone){ completeLesson(); }
+}
+
+function completeLesson(){
+  if(state.lesson1Done) return;
+  state.lesson1Done = true;
+  localStorage.setItem('parryLesson1Completed','true');
+  updateProgress(30, true);
+}
+
+/* ── RESET ── */
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if(!confirm('Reset all Lesson 1 progress?')) return;
+  localStorage.removeItem('parryLesson1Completed');
+  localStorage.removeItem('parryBadges');
+  location.reload();
+});
+
+/* ── NEXT ── */
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if(state.lesson1Done) window.location.href = 'lesson2.html';
+});
+
+/* ── INIT ── */
+(function init(){
+  renderAuth();
+
+  // Restore badges
+  const saved = JSON.parse(localStorage.getItem('parryBadges') || '[]');
+  saved.forEach(id => {
+    state.badgesEarned.push(id);
+    const el = document.getElementById(id);
+    if(el){ el.classList.remove('locked'); el.classList.add('earned'); }
+  });
+
+  // Restore lesson
+  if(localStorage.getItem('parryLesson1Completed') === 'true'){
+    state.lesson1Done = true;
+    updateProgress(30, true);
+  }
+
+  // Start quiz
+  renderQuestion();
+
+  // Animate stats after slight delay
+  setTimeout(animateCounters, 400);
+})();
+
+// Scroll-based fade in
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.style.animationPlayState = 'running'; observer.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.card, .stat-card').forEach(el => {
+  el.style.animationPlayState = 'paused';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

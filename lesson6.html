@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parry Security | Lesson 6 – Data Privacy & Social Media</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:       #0d9488;
+  --teal-light: #ccfbf1;
+  --teal-mid:   #14b8a6;
+  --navy:       #0f172a;
+  --ink:        #1e293b;
+  --muted:      #64748b;
+  --faint:      #94a3b8;
+  --border:     #e2e8f0;
+  --surface:    #f8fafc;
+  --white:      #ffffff;
+  --red:        #ef4444;
+  --red-light:  #fee2e2;
+  --amber:      #f59e0b;
+  --amber-light:#fef3c7;
+  --green:      #10b981;
+  --green-light:#d1fae5;
+  --indigo:     #6366f1;
+  --indigo-light:#eef2ff;
+  --pink:       #ec4899;
+  --pink-light: #fce7f3;
+  --radius-sm:  8px;
+  --radius-md:  14px;
+  --radius-lg:  22px;
+  --shadow-xs:  0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+  --shadow-sm:  0 4px 16px rgba(15,23,42,.07);
+  --shadow-md:  0 8px 32px rgba(15,23,42,.10);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body {
+  font-family:'Figtree',system-ui,sans-serif;
+  background:var(--surface);
+  color:var(--ink);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(236,72,153,.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 110%, rgba(13,148,136,.04) 0%, transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+.container { max-width:1140px; margin:0 auto; padding:0 1.5rem; position:relative; z-index:1; }
+
+/* HEADER */
+.site-header {
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.header-inner {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  padding:.9rem 1.5rem;
+  max-width:1140px;
+  margin:0 auto;
+}
+.logo { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
+.logo-shield {
+  width:40px; height:40px;
+  background:linear-gradient(135deg,var(--pink),var(--teal));
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:1.2rem;
+  animation:shieldPulse 3s ease-in-out infinite;
+}
+@keyframes shieldPulse {
+  0%,100%{ box-shadow:0 0 0 0 rgba(236,72,153,.3); }
+  50%{ box-shadow:0 0 0 8px rgba(236,72,153,0); }
+}
+.logo-text h1 { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:700; color:var(--navy); }
+.logo-text p  { font-size:.68rem; color:var(--muted); }
+
+.header-meta { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+.lesson-badge {
+  background:var(--pink-light);
+  color:var(--pink);
+  font-size:.72rem; font-weight:600;
+  padding:.3rem .8rem; border-radius:40px;
+}
+.reading-time { font-size:.72rem; color:var(--muted); }
+
+.user-pill {
+  display:flex; align-items:center; gap:.5rem;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:40px; padding:.25rem .25rem .25rem .25rem;
+}
+.user-avatar {
+  width:30px; height:30px; border-radius:50%;
+  background:linear-gradient(135deg,var(--pink),var(--teal));
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:.7rem; font-weight:700;
+}
+.user-name { font-size:.78rem; font-weight:600; padding-right:.5rem; }
+.btn-auth {
+  padding:.42rem 1.1rem; border-radius:40px;
+  font-size:.78rem; font-weight:600; cursor:pointer;
+  text-decoration:none; transition:all .25s; border:none;
+}
+.btn-ghost { background:transparent; border:1.5px solid var(--pink); color:var(--pink); }
+.btn-ghost:hover { background:var(--pink); color:#fff; }
+.btn-solid { background:var(--pink); color:#fff; }
+.btn-solid:hover { background:#db2777; }
+.btn-out { background:transparent; border:1px solid var(--border); color:var(--muted); font-size:.68rem; padding:.22rem .7rem; }
+
+/* PROGRESS */
+.progress-strip {
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  padding:.7rem 1.5rem;
+}
+.prog-inner { max-width:1140px; margin:0 auto; display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap; }
+.prog-label { font-size:.72rem; font-weight:600; color:var(--muted); white-space:nowrap; }
+.prog-track { flex:1; background:var(--border); border-radius:20px; height:5px; overflow:hidden; }
+.prog-fill {
+  height:100%; border-radius:20px;
+  background:linear-gradient(90deg,var(--pink),var(--teal));
+  width:0%; transition:width .8s cubic-bezier(.4,0,.2,1);
+}
+.prog-steps { display:flex; gap:.5rem; flex-wrap:wrap; }
+.prog-step {
+  font-size:.65rem; font-weight:600; padding:.2rem .55rem;
+  border-radius:20px; background:var(--surface); color:var(--faint);
+  border:1px solid var(--border); transition:all .3s;
+}
+.prog-step.active { background:var(--pink); color:#fff; border-color:var(--pink); }
+.prog-step.done   { background:var(--green-light); color:#065f46; border-color:#a7f3d0; }
+
+/* HERO */
+.lesson-hero {
+  padding:3rem 0 2rem;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:2rem;
+  align-items:center;
+}
+@media(max-width:720px){ .lesson-hero{ grid-template-columns:1fr; } }
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:var(--pink-light); color:var(--pink);
+  font-size:.72rem; font-weight:600;
+  padding:.3rem .9rem; border-radius:40px; margin-bottom:1rem;
+}
+.hero-title {
+  font-family:'Sora',sans-serif;
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  font-weight:800; color:var(--navy); line-height:1.2;
+  margin-bottom:.8rem;
+}
+.hero-title span { color:var(--pink); }
+.hero-desc { font-size:1rem; color:var(--muted); max-width:520px; margin-bottom:1.5rem; }
+.hero-chips { display:flex; flex-wrap:wrap; gap:.5rem; }
+.chip {
+  font-size:.72rem; font-weight:600;
+  padding:.3rem .8rem; border-radius:20px;
+  display:flex; align-items:center; gap:.35rem;
+}
+.chip-pink  { background:var(--pink-light); color:var(--pink); }
+.chip-red   { background:var(--red-light); color:#991b1b; }
+.chip-teal  { background:var(--teal-light); color:var(--teal); }
+
+.hero-visual {
+  position:relative;
+  width:180px; height:180px;
+  flex-shrink:0;
+}
+.hero-ring {
+  position:absolute; inset:0;
+  border-radius:50%;
+  border:2px solid var(--border);
+  animation:spin 20s linear infinite;
+}
+.hero-ring::before {
+  content:''; position:absolute;
+  top:-2px; left:50%;
+  width:10px; height:10px;
+  background:var(--pink); border-radius:50%;
+  transform:translateX(-50%);
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.hero-ring-2 {
+  position:absolute; inset:20px;
+  border-radius:50%;
+  border:2px dashed #cbd5e1;
+  animation:spin 15s linear infinite reverse;
+}
+.hero-center {
+  position:absolute; inset:35px;
+  background:linear-gradient(135deg,var(--pink),var(--navy));
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.5rem;
+  box-shadow:var(--shadow-md);
+}
+.hero-float {
+  position:absolute;
+  background:var(--white); border-radius:var(--radius-sm);
+  box-shadow:var(--shadow-sm); border:1px solid var(--border);
+  font-size:.65rem; font-weight:600; padding:.3rem .6rem;
+  animation:float 3s ease-in-out infinite;
+}
+.hero-float:nth-child(4){ top:5px; right:-10px; animation-delay:0s; }
+.hero-float:nth-child(5){ bottom:15px; left:-10px; animation-delay:1s; }
+.hero-float:nth-child(6){ top:50%; right:-30px; animation-delay:2s; }
+@keyframes float{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-6px); }
+}
+
+/* STATS */
+.stats-section { padding:0 0 2rem; }
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1rem; }
+.stat-card {
+  background:var(--white); border:1px solid var(--border);
+  border-radius:var(--radius-md); padding:1.2rem;
+  text-align:center;
+  box-shadow:var(--shadow-xs);
+  transition:transform .3s,box-shadow .3s;
+  animation:fadeUp .6s ease backwards;
+}
+.stat-card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-sm); }
+.stat-icon {
+  width:42px; height:42px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.2rem; margin:0 auto .8rem;
+}
+.stat-icon.pink  { background:var(--pink-light); }
+.stat-icon.red   { background:var(--red-light); }
+.stat-icon.amber { background:var(--amber-light); }
+.stat-icon.teal  { background:var(--teal-light); }
+.stat-num {
+  font-family:'Sora',sans-serif;
+  font-size:1.7rem; font-weight:800; color:var(--navy);
+  line-height:1;
+}
+.stat-lbl { font-size:.7rem; color:var(--muted); margin-top:.35rem; }
+
+/* SECTION HEAD */
+.section-head {
+  display:flex; align-items:center; gap:.75rem;
+  margin-bottom:1.25rem;
+}
+.section-head-icon {
+  width:36px; height:36px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center; font-size:1rem;
+}
+.section-head h2 {
+  font-family:'Sora',sans-serif; font-size:1.25rem; font-weight:700; color:var(--navy);
+}
+.section-head p { font-size:.8rem; color:var(--muted); margin-top:.1rem; }
+
+/* CARDS */
+.card {
+  background:var(--white); border:1px solid var(--border);
+  border-radius:var(--radius-lg); padding:1.6rem;
+  box-shadow:var(--shadow-xs);
+  animation:fadeUp .6s ease backwards;
+}
+@keyframes fadeUp{
+  from{ opacity:0; transform:translateY(20px); }
+  to  { opacity:1; transform:translateY(0); }
+}
+
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem; }
+@media(max-width:800px){ .two-col{ grid-template-columns:1fr; } }
+.full-col { margin-bottom:1.25rem; }
+
+/* LISTS */
+.risk-list { list-style:none; display:flex; flex-direction:column; gap:.15rem; }
+.risk-item {
+  display:flex; align-items:flex-start; gap:.9rem;
+  padding:.75rem .9rem; border-radius:var(--radius-sm);
+  border:1px solid transparent;
+  cursor:default;
+  transition:background .2s,border-color .2s,transform .2s;
+}
+.risk-item:hover {
+  background:var(--red-light); border-color:#fca5a5;
+  transform:translateX(4px);
+}
+.risk-icon {
+  width:28px; height:28px; min-width:28px;
+  background:var(--red-light); border-radius:7px;
+  display:flex; align-items:center; justify-content:center; font-size:.9rem;
+}
+.risk-txt strong { font-size:.88rem; color:var(--navy); }
+.risk-txt span   { font-size:.76rem; color:var(--muted); display:block; margin-top:.1rem; }
+
+.safe-list { list-style:none; display:flex; flex-direction:column; gap:.15rem; }
+.safe-item {
+  display:flex; align-items:flex-start; gap:.9rem;
+  padding:.75rem .9rem; border-radius:var(--radius-sm);
+  border:1px solid transparent;
+  cursor:default;
+  transition:background .2s,border-color .2s,transform .2s;
+}
+.safe-item:hover {
+  background:var(--green-light); border-color:#a7f3d0;
+  transform:translateX(4px);
+}
+.safe-icon {
+  width:28px; height:28px; min-width:28px;
+  background:var(--green-light); border-radius:7px;
+  display:flex; align-items:center; justify-content:center; font-size:.9rem;
+}
+.safe-txt strong { font-size:.88rem; color:var(--navy); }
+.safe-txt span   { font-size:.76rem; color:var(--muted); display:block; margin-top:.1rem; }
+
+/* PRIVACY CHECKLIST */
+.privacy-checklist {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:.8rem;
+  margin:1rem 0;
+}
+.checklist-item {
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  padding:1rem;
+  background:var(--surface);
+  border:2px solid var(--border);
+  border-radius:var(--radius-md);
+  cursor:pointer;
+  transition:all .25s;
+}
+.checklist-item:hover {
+  border-color:var(--pink);
+  transform:translateY(-2px);
+}
+.checklist-item input {
+  width:22px;
+  height:22px;
+  cursor:pointer;
+  accent-color:var(--pink);
+}
+.checklist-label {
+  flex:1;
+  font-size:.85rem;
+  font-weight:500;
+}
+.checklist-correct {
+  border-color:var(--green);
+  background:var(--green-light);
+}
+.btn-submit {
+  background:var(--pink);
+  color:#fff;
+  border:none;
+  padding:.8rem 1.8rem;
+  border-radius:40px;
+  font-size:.9rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .25s;
+  margin:1rem 0;
+}
+.btn-submit:hover {
+  background:#db2777;
+  transform:translateY(-2px);
+}
+
+/* TIP GRID */
+.tip-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:.8rem; }
+.tip-card {
+  display:flex; align-items:flex-start; gap:.75rem;
+  padding:.9rem 1rem; border-radius:var(--radius-sm);
+  border:1px solid var(--border); background:var(--surface);
+  transition:all .25s;
+}
+.tip-card:hover { border-color:var(--pink); background:var(--pink-light); transform:translateY(-2px); }
+.tip-icon {
+  width:32px; height:32px; min-width:32px; border-radius:8px;
+  background:var(--pink-light); display:flex; align-items:center; justify-content:center; font-size:1rem;
+}
+.tip-text strong { font-size:.82rem; color:var(--navy); display:block; }
+.tip-text span   { font-size:.72rem; color:var(--muted); }
+
+/* TIP BANNER */
+.tip-banner {
+  display:flex; justify-content:space-between; align-items:center;
+  gap:1rem; padding:.8rem 1.3rem;
+  background:linear-gradient(135deg,var(--amber-light),#fef9c3);
+  border:1px solid #fde68a; border-radius:var(--radius-md);
+  margin-bottom:1.5rem; flex-wrap:wrap;
+}
+.tip-banner span { font-size:.84rem; font-weight:500; color:#78350f; }
+.btn-tip-next {
+  background:transparent; border:1.5px solid #d97706;
+  color:#d97706; padding:.25rem .9rem; border-radius:20px;
+  font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s;
+}
+.btn-tip-next:hover { background:#d97706; color:#fff; }
+
+/* QUIZ */
+.quiz-question { font-family:'Sora',sans-serif; font-size:.95rem; font-weight:600; margin-bottom:1rem; color:var(--navy); }
+.quiz-options { display:flex; flex-direction:column; gap:.6rem; margin-bottom:1.2rem; }
+.quiz-opt {
+  padding:.85rem 1.1rem; border-radius:var(--radius-sm);
+  border:1.5px solid var(--border); background:var(--white);
+  cursor:pointer; font-size:.88rem; text-align:left;
+  transition:all .2s; font-family:'Figtree',sans-serif;
+  display:flex; align-items:center; gap:.75rem;
+}
+.quiz-opt:hover:not(.answered) { border-color:var(--pink); background:var(--pink-light); }
+.quiz-opt.correct  { border-color:var(--green); background:var(--green-light); }
+.quiz-opt.wrong    { border-color:var(--red);   background:var(--red-light); }
+.quiz-opt::before { content:'○'; color:var(--faint); font-size:1rem; }
+.quiz-opt.correct::before { content:'✓'; color:var(--green); font-weight:700; }
+.quiz-opt.wrong::before   { content:'✗'; color:var(--red); font-weight:700; }
+.quiz-feedback {
+  padding:.8rem 1.1rem; border-radius:var(--radius-sm);
+  font-size:.82rem; display:none; animation:fadeIn .3s;
+}
+.quiz-feedback.ok { background:var(--green-light); border-left:3px solid var(--green); }
+.quiz-feedback.ng { background:var(--red-light);   border-left:3px solid var(--red); }
+.quiz-progress { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; flex-wrap:wrap; gap:.5rem; }
+.quiz-prog-dots { display:flex; gap:.4rem; }
+.quiz-prog-dot { width:8px; height:8px; border-radius:50%; background:var(--border); }
+.quiz-prog-dot.done-ok  { background:var(--green); }
+.quiz-prog-dot.done-ng  { background:var(--red);   }
+.quiz-prog-dot.current  { background:var(--pink); transform:scale(1.3); }
+.quiz-score {
+  text-align:center; padding:1.5rem;
+  background:var(--surface); border-radius:var(--radius-md);
+  border:1px solid var(--border); display:none;
+}
+.score-big { font-family:'Sora',sans-serif; font-size:3rem; font-weight:800; color:var(--pink); }
+.btn-quiz-nav {
+  background:var(--navy); color:#fff; border:none;
+  padding:.65rem 1.5rem; border-radius:40px;
+  font-size:.85rem; font-weight:600; cursor:pointer;
+  font-family:'Figtree',sans-serif; margin-top:1rem;
+}
+.btn-quiz-nav:hover { background:var(--ink); }
+
+/* FEEDBACK */
+.ex-feedback {
+  padding:1rem 1.2rem; border-radius:var(--radius-sm); display:none;
+  font-size:.85rem; animation:fadeIn .35s;
+}
+.ex-feedback.ok { background:var(--green-light); border-left:3px solid var(--green); }
+.ex-feedback.ng { background:var(--red-light);   border-left:3px solid var(--red); }
+
+/* GLOSSARY */
+.glossary-item { border-bottom:1px solid var(--border); }
+.glossary-term {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:.85rem 0; cursor:pointer;
+}
+.glossary-term strong { font-size:.9rem; color:var(--navy); }
+.gloss-icon { font-size:.8rem; color:var(--faint); transition:transform .3s; }
+.glossary-def {
+  font-size:.82rem; color:var(--muted); line-height:1.6;
+  max-height:0; overflow:hidden; transition:max-height .35s ease, padding .3s;
+  padding-bottom:0;
+}
+.glossary-item.open .glossary-def  { max-height:200px; padding-bottom:.9rem; }
+.glossary-item.open .gloss-icon     { transform:rotate(45deg); color:var(--pink); }
+
+/* BADGES */
+.badges-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:.8rem; }
+.badge-item {
+  text-align:center; padding:.9rem .6rem;
+  border-radius:var(--radius-md); border:1px solid var(--border);
+  background:var(--surface);
+  transition:all .3s;
+}
+.badge-item.earned { background:var(--white); border-color:#f9a8d4; box-shadow:var(--shadow-xs); }
+.badge-item.locked { filter:grayscale(1); opacity:.45; }
+.badge-emoji { font-size:2rem; margin-bottom:.4rem; }
+.badge-name { font-size:.72rem; font-weight:700; color:var(--navy); margin-bottom:.15rem; }
+.badge-desc { font-size:.65rem; color:var(--muted); }
+
+/* NAV BUTTONS */
+.page-nav {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:1.5rem 0 2rem; gap:1rem; flex-wrap:wrap;
+}
+.btn-reset {
+  background:var(--white); border:1.5px solid var(--border);
+  color:var(--muted); padding:.7rem 1.6rem; border-radius:40px;
+  font-size:.85rem; font-weight:600; cursor:pointer;
+  font-family:'Figtree',sans-serif;
+}
+.btn-reset:hover { border-color:var(--red); color:var(--red); }
+.btn-next {
+  background:var(--navy); color:#fff; border:none;
+  padding:.8rem 2rem; border-radius:40px;
+  font-size:.88rem; font-weight:600; cursor:pointer;
+  font-family:'Figtree',sans-serif;
+  display:flex; align-items:center; gap:.6rem;
+}
+.btn-next:hover:not(:disabled) { background:var(--ink); transform:translateY(-2px); box-shadow:var(--shadow-sm); }
+.btn-next:disabled { opacity:.4; cursor:not-allowed; }
+
+footer {
+  background:var(--white); border-top:1px solid var(--border);
+  padding:1.5rem; text-align:center; font-size:.72rem; color:var(--faint);
+}
+@keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+@media(max-width:600px){
+  .header-inner{ flex-wrap:wrap; }
+  .header-meta{ flex-wrap:wrap; gap:.5rem; }
+  .lesson-hero{ padding:1.5rem 0 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <div class="logo-shield">🛡️</div>
+      <div class="logo-text">
+        <h1>Parry Security</h1>
+        <p>Your Digital Shield – Empowering Safe Online Choices</p>
+      </div>
+    </a>
+    <div class="header-meta">
+      <span class="lesson-badge">📘 Module 6</span>
+      <span class="reading-time">⏱ 10 min read</span>
+      <div id="authArea"></div>
+    </div>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-strip">
+  <div class="prog-inner">
+    <span class="prog-label">Progress</span>
+    <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+    <span class="prog-label" id="progPct">0%</span>
+    <div class="prog-steps">
+      <span class="prog-step done" id="st1">✓ L1</span>
+      <span class="prog-step done" id="st2">✓ L2</span>
+      <span class="prog-step done" id="st3">✓ L3</span>
+      <span class="prog-step done" id="st4">✓ L4</span>
+      <span class="prog-step done" id="st5">✓ L5</span>
+      <span class="prog-step active" id="st6">L6</span>
+      <span class="prog-step" id="stQ">Quiz</span>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding-top:0">
+
+<!-- HERO -->
+<div class="lesson-hero">
+  <div>
+    <div class="hero-eyebrow">🔒 Lesson 6 of 6</div>
+    <h1 class="hero-title">Data Privacy &<br><span>Social Media</span></h1>
+    <p class="hero-desc">Every post, like, and share creates a digital footprint. Learn how to protect your privacy, control your data, and use social media safely without oversharing.</p>
+    <div class="hero-chips">
+      <span class="chip chip-pink">📱 Social Media Safety</span>
+      <span class="chip chip-red">⚠️ 79% overshare online</span>
+      <span class="chip chip-teal">🔒 Control Your Data</span>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-ring"></div>
+    <div class="hero-ring-2"></div>
+    <div class="hero-center">🔒</div>
+    <div class="hero-float">📸 Share</div>
+    <div class="hero-float">🔐 Private</div>
+    <div class="hero-float">📍 Location</div>
+  </div>
+</div>
+
+<!-- TIP BANNER -->
+<div class="tip-banner">
+  <span id="tipText">💡 79% of people overshare personal information online — what you post today could be used against you years later.</span>
+  <button class="btn-tip-next" id="tipNext">Next Tip →</button>
+</div>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-card" style="animation-delay:.0s">
+      <div class="stat-icon pink">📱</div>
+      <div class="stat-num" data-counter="79" data-suffix="%">0%</div>
+      <div class="stat-lbl">Overshare personal info online</div>
+    </div>
+    <div class="stat-card" style="animation-delay:.1s">
+      <div class="stat-icon red">📍</div>
+      <div class="stat-num" data-counter="65" data-suffix="%">0%</div>
+      <div class="stat-lbl">Post location while still travelling</div>
+    </div>
+    <div class="stat-card" style="animation-delay:.2s">
+      <div class="stat-icon amber">⚠️</div>
+      <div class="stat-num" data-counter="43" data-suffix="%">0%</div>
+      <div class="stat-lbl">Never review privacy settings</div>
+    </div>
+    <div class="stat-card" style="animation-delay:.3s">
+      <div class="stat-icon teal">🔒</div>
+      <div class="stat-num" data-counter="500" data-suffix="M">0M</div>
+      <div class="stat-lbl">Social media users data collected</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN GRID ROW 1 -->
+<div class="two-col">
+
+  <!-- Social Media Risks -->
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--red-light)">⚠️</div>
+      <div>
+        <h2>Social Media Risks</h2>
+        <p>How oversharing makes you vulnerable</p>
+      </div>
+    </div>
+    <ul class="risk-list">
+      <li class="risk-item">
+        <div class="risk-icon">📍</div>
+        <div class="risk-txt">
+          <strong>Real-time Location Sharing</strong>
+          <span>Posting vacation photos while away tells burglars your home is empty</span>
+        </div>
+      </li>
+      <li class="risk-item">
+        <div class="risk-icon">🎂</div>
+        <div class="risk-txt">
+          <strong>Personal Information Exposure</strong>
+          <span>Birth date, pet names, mother's maiden name — all answers to security questions</span>
+        </div>
+      </li>
+      <li class="risk-item">
+        <div class="risk-icon">📸</div>
+        <div class="risk-txt">
+          <strong>Photo Metadata</strong>
+          <span>Photos often contain GPS coordinates and device information</span>
+        </div>
+      </li>
+      <li class="risk-item">
+        <div class="risk-icon">🎭</div>
+        <div class="risk-txt">
+          <strong>Impersonation & Catfishing</strong>
+          <span>Scraped photos and info used to create fake profiles</span>
+        </div>
+      </li>
+      <li class="risk-item">
+        <div class="risk-icon">📧</div>
+        <div class="risk-txt">
+          <strong>Data Aggregation</strong>
+          <span>Companies collect and sell your data to advertisers and data brokers</span>
+        </div>
+      </li>
+      <li class="risk-item">
+        <div class="risk-icon">🔓</div>
+        <div class="risk-txt">
+          <strong>Job & Reputation Damage</strong>
+          <span>Employers check social media — inappropriate posts can cost opportunities</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Data Privacy Tips -->
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--green-light)">✅</div>
+      <div>
+        <h2>Data Privacy Best Practices</h2>
+        <p>Take control of your digital footprint</p>
+      </div>
+    </div>
+    <ul class="safe-list">
+      <li class="safe-item">
+        <div class="safe-icon">🔒</div>
+        <div class="safe-txt">
+          <strong>Use Strong Privacy Settings</strong>
+          <span>Make profiles private — only friends can see your posts</span>
+        </div>
+      </li>
+      <li class="safe-item">
+        <div class="safe-icon">⏰</div>
+        <div class="safe-txt">
+          <strong>Share Vacation Photos AFTER Returning</strong>
+          <span>Post memories when you're back home, not during the trip</span>
+        </div>
+      </li>
+      <li class="safe-item">
+        <div class="safe-icon">🔍</div>
+        <div class="safe-txt">
+          <strong>Google Yourself Regularly</strong>
+          <span>See what information about you is publicly accessible</span>
+        </div>
+      </li>
+      <li class="safe-item">
+        <div class="safe-icon">📋</div>
+        <div class="safe-txt">
+          <strong>Limit What You Share</strong>
+          <span>Don't post your full birth date, address, phone number, or ID documents</span>
+        </div>
+      </li>
+      <li class="safe-item">
+        <div class="safe-icon">🔐</div>
+        <div class="safe-txt">
+          <strong>Use Different Emails for Different Services</strong>
+          <span>Makes it harder to track you across platforms</span>
+        </div>
+      </li>
+      <li class="safe-item">
+        <div class="safe-icon">🗑️</div>
+        <div class="safe-txt">
+          <strong>Delete Old Accounts</strong>
+          <span>Inactive accounts still hold your personal data</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- PRIVACY CHECKLIST EXERCISE -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--pink-light)">📋</div>
+      <div>
+        <h2>Interactive: Privacy Checklist</h2>
+        <p>Which of these are GOOD privacy practices? Check all that apply.</p>
+      </div>
+    </div>
+
+    <div class="privacy-checklist" id="privacyChecklist">
+      <div class="checklist-item" data-good="true" data-practice="private-profile">
+        <input type="checkbox" id="priv1">
+        <label class="checklist-label" for="priv1">Setting social media profiles to private</label>
+      </div>
+      <div class="checklist-item" data-good="false" data-practice="post-location">
+        <input type="checkbox" id="priv2">
+        <label class="checklist-label" for="priv2">Posting "On vacation in Hawaii — back in 2 weeks!" while still away</label>
+      </div>
+      <div class="checklist-item" data-good="true" data-practice="blur-id">
+        <input type="checkbox" id="priv3">
+        <label class="checklist-label" for="priv3">Blurring your boarding pass and ID before posting photos</label>
+      </div>
+      <div class="checklist-item" data-good="false" data-practice="post-birthdate">
+        <input type="checkbox" id="priv4">
+        <label class="checklist-label" for="priv4">Posting your full birth date, including year, on public profiles</label>
+      </div>
+      <div class="checklist-item" data-good="true" data-practice="review-apps">
+        <input type="checkbox" id="priv5">
+        <label class="checklist-label" for="priv5">Reviewing which apps have access to your social media accounts</label>
+      </div>
+      <div class="checklist-item" data-good="false" data-practice="tag-location">
+        <input type="checkbox" id="priv6">
+        <label class="checklist-label" for="priv6">Tagging your home address and workplace in posts</label>
+      </div>
+      <div class="checklist-item" data-good="true" data-practice="two-factor">
+        <input type="checkbox" id="priv7">
+        <label class="checklist-label" for="priv7">Enabling two-factor authentication on social media accounts</label>
+      </div>
+      <div class="checklist-item" data-good="false" data-practice="accept-strangers">
+        <input type="checkbox" id="priv8">
+        <label class="checklist-label" for="priv8">Accepting friend requests from people you don't know</label>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="submitPrivacy">📋 Check My Privacy Knowledge</button>
+
+    <div id="privacyFeedback" class="ex-feedback" style="display:none;"></div>
+    <div id="privacyScore" style="display:none; margin-top:1rem; padding:1rem; background:var(--surface); border-radius:var(--radius-md); text-align:center;"></div>
+
+    <div class="tip-grid" style="margin-top:1rem;">
+      <div class="tip-card">
+        <div class="tip-icon">🔒</div>
+        <div class="tip-text">
+          <strong>Privacy Checkup</strong>
+          <span>Most platforms have a "Privacy Checkup" tool — use it quarterly</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📸</div>
+        <div class="tip-text">
+          <strong>Remove Metadata</strong>
+          <span>Use tools to strip GPS data from photos before sharing</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🔍</div>
+        <div class="tip-text">
+          <strong>Data Broker Opt-Out</strong>
+          <span>Request removal from data broker sites like Spokeo, Whitepages</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROTECTION TIPS -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--green-light)">🛡️</div>
+      <div>
+        <h2>Social Media Safety Rules</h2>
+        <p>Think before you post — protect your digital reputation</p>
+      </div>
+    </div>
+    <div class="tip-grid">
+      <div class="tip-card">
+        <div class="tip-icon">⏰</div>
+        <div class="tip-text">
+          <strong>The "Holiday Rule"</strong>
+          <span>Post vacation photos AFTER you return home, not during</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🔒</div>
+        <div class="tip-text">
+          <strong>Privacy Settings First</strong>
+          <span>Set profiles to private before posting anything personal</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">👥</div>
+        <div class="tip-text">
+          <strong>Don't Accept Strangers</strong>
+          <span>Scammers create fake profiles to gather your information</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🔐</div>
+        <div class="tip-text">
+          <strong>Never Share Security Answers</strong>
+          <span>Mother's maiden name, first pet, school names — keep them private</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📱</div>
+        <div class="tip-text">
+          <strong>Log Out of Shared Devices</strong>
+          <span>Always log out from public computers or friends' phones</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🗑️</div>
+        <div class="tip-text">
+          <strong>Delete Old Posts</strong>
+          <span>Old content can resurface — regularly audit your posts</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KNOWLEDGE QUIZ -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--indigo-light)">🧩</div>
+      <div>
+        <h2>Knowledge Check</h2>
+        <p>Test what you've learned — 4 questions</p>
+      </div>
+    </div>
+    <div id="quizArea">
+      <div class="quiz-progress">
+        <div class="quiz-prog-dots" id="quizDots"></div>
+        <span id="quizCounter" style="font-size:.76rem; color:var(--muted)">Question 1 of 4</span>
+      </div>
+      <div class="quiz-question" id="quizQ"></div>
+      <div class="quiz-options" id="quizOpts"></div>
+      <div class="quiz-feedback" id="quizFb"></div>
+      <button class="btn-quiz-nav" id="quizNextBtn" style="display:none"></button>
+    </div>
+    <div class="quiz-score" id="quizScore">
+      <div class="score-big" id="scoreBig"></div>
+      <h3 id="scoreTitle"></h3>
+      <p id="scoreDesc" style="font-size:.85rem; color:var(--muted); margin:.5rem 0 1rem"></p>
+      <button class="btn-quiz-nav" id="retryBtn">↩ Retry Quiz</button>
+    </div>
+  </div>
+</div>
+
+<!-- GLOSSARY -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--surface)">📚</div>
+      <div>
+        <h2>Glossary of Terms</h2>
+        <p>Key concepts explained — click to expand</p>
+      </div>
+    </div>
+    <div id="glossary">
+      <div class="glossary-item"><div class="glossary-term"><strong>Digital Footprint</strong><span class="gloss-icon">+</span></div><div class="glossary-def">The trail of data you leave online — posts, comments, likes, searches, and check-ins. Once online, it's nearly impossible to fully delete.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Data Broker</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Companies that collect, aggregate, and sell your personal information. They know your address, income, shopping habits, and more.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Metadata</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Data about your data — photos contain GPS coordinates, timestamps, device information. Tools can strip this before sharing.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Social Engineering</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Psychological manipulation to extract information. Oversharing on social media provides attackers with valuable ammunition.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Impersonation Attack</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Attackers create fake profiles using your publicly available photos and information to trick your friends or damage your reputation.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Doxxing</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Publishing someone's private information (address, phone number, workplace) online maliciously, often after gathering from public social media.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--amber-light)">🏆</div>
+      <div>
+        <h2>Achievements</h2>
+        <p>Unlock badges as you progress through the lesson</p>
+      </div>
+    </div>
+    <div class="badges-grid" id="badgesGrid">
+      <div class="badge-item locked" id="badge1"><div class="badge-emoji">📋</div><div class="badge-name">Privacy Pro</div><div class="badge-desc">Complete the privacy checklist</div></div>
+      <div class="badge-item locked" id="badge2"><div class="badge-emoji">🧠</div><div class="badge-name">Quiz Master</div><div class="badge-desc">Score 3/4 or above in the quiz</div></div>
+      <div class="badge-item locked" id="badge3"><div class="badge-emoji">🔒</div><div class="badge-name">Data Guardian</div><div class="badge-desc">Learn about data brokers</div></div>
+      <div class="badge-item locked" id="badge4"><div class="badge-emoji">📚</div><div class="badge-name">Glossary Expert</div><div class="badge-desc">Open all glossary terms</div></div>
+      <div class="badge-item locked" id="badge5"><div class="badge-emoji">🏆</div><div class="badge-name">Lesson Champion</div><div class="badge-desc">Complete Lesson 6 fully</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE NAV -->
+<div class="page-nav">
+  <button class="btn-reset" id="resetBtn">↺ Reset Lesson</button>
+  <button class="btn-next" id="nextBtn" disabled>
+    🎓 Final Quiz (Complete Lesson 6 first) <span class="arrow">→</span>
+  </button>
+</div>
+
+</div><!-- /container -->
+
+<footer>🛡️ Parry Security – Cyber Safety Training &nbsp;|&nbsp; Lesson 6: Data Privacy & Social Media &nbsp;|&nbsp; Your data is valuable — protect it.</footer>
+
+<script>
+    // FORCE ENABLE NEXT BUTTON AND NAVIGATION TO QUIZ
+document.getElementById('nextBtn').onclick = function() {
+  localStorage.setItem('parryLesson6Completed', 'true');
+  window.location.href = 'quiz.html';
+  return false;
+};
+document.getElementById('nextBtn').disabled = false;
+// STATE
+let lesson6Completed = false;
+let privacyChecklistCompleted = false;
+let quizScore = 0;
+let qResults = [];
+
+// AUTH
+function renderAuth(){
+  const el = document.getElementById('authArea');
+  const u = (() => { try{ return JSON.parse(localStorage.getItem('parryCurrentUser')); } catch(e){ return null; } })();
+  if(u){
+    const n = u.fullName.split(' ')[0];
+    el.innerHTML = `<div class="user-pill"><div class="user-avatar">${n[0].toUpperCase()}</div><span class="user-name">${n}</span><button class="btn-auth btn-out" onclick="doLogout()">Logout</button></div>`;
+  } else {
+    el.innerHTML = `<a href="login.html" class="btn-auth btn-ghost">Login</a><a href="index.html" class="btn-auth btn-solid">Sign Up</a>`;
+  }
+}
+function doLogout(){ localStorage.removeItem('parryCurrentUser'); location.reload(); }
+
+// PROGRESS & LESSON COMPLETE
+function updateProgress(pct, done){
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progPct').textContent = pct + '%';
+  if(done){
+    const s6 = document.getElementById('st6');
+    s6.textContent = '✓ L6';
+    s6.classList.remove('active'); s6.classList.add('done');
+    document.getElementById('nextBtn').disabled = false;
+    earnBadge('badge5');
+    localStorage.setItem('parryLesson6Completed','true');
+  }
+}
+
+function checkLessonComplete(){
+  if(privacyChecklistCompleted && quizScore >= 3 && !lesson6Completed){
+    lesson6Completed = true;
+    updateProgress(30, true);
+  }
+}
+
+// PRIVACY CHECKLIST
+const goodPractices = ["private-profile", "blur-id", "review-apps", "two-factor"];
+let privacySubmitted = false;
+
+document.getElementById('submitPrivacy').addEventListener('click', () => {
+  if(privacySubmitted) return;
+  
+  const checkedItems = [];
+  const items = document.querySelectorAll('.checklist-item');
+  let correctCount = 0;
+  let falsePositives = 0;
+  
+  items.forEach(item => {
+    const checkbox = item.querySelector('input');
+    const isGood = item.dataset.good === 'true';
+    const wasChecked = checkbox.checked;
+    const practice = item.dataset.practice;
+    
+    if(wasChecked){
+      checkedItems.push(practice);
+      if(isGood) correctCount++;
+      else falsePositives++;
+    }
+  });
+  
+  const totalGood = goodPractices.length;
+  const missed = goodPractices.filter(p => !checkedItems.includes(p));
+  
+  const fb = document.getElementById('privacyFeedback');
+  const scoreDiv = document.getElementById('privacyScore');
+  fb.style.display = 'block';
+  scoreDiv.style.display = 'block';
+  
+  if(correctCount === totalGood && falsePositives === 0){
+    fb.className = 'ex-feedback ok';
+    fb.innerHTML = '🎉 PERFECT! You correctly identified ALL good privacy practices!';
+    scoreDiv.innerHTML = `✅ Score: ${correctCount}/${totalGood} good practices identified. No false alarms!<br><br>🔒 You understand data privacy well!`;
+    privacySubmitted = true;
+    privacyChecklistCompleted = true;
+    earnBadge('badge1');
+    checkLessonComplete();
+    
+    items.forEach(item => {
+      const isGood = item.dataset.good === 'true';
+      const checkbox = item.querySelector('input');
+      if(isGood && checkbox.checked){
+        item.classList.add('checklist-correct');
+      } else if(isGood && !checkbox.checked){
+        item.classList.add('checklist-wrong');
+      } else if(!isGood && checkbox.checked){
+        item.classList.add('checklist-wrong');
+      } else if(!isGood && !checkbox.checked){
+        item.classList.add('checklist-correct');
+      }
+    });
+  } else {
+    fb.className = 'ex-feedback ng';
+    let msg = `📊 You identified ${correctCount}/${totalGood} good privacy practices correctly. `;
+    if(falsePositives > 0) msg += `⚠️ You marked ${falsePositives} bad practice(s) as good. `;
+    if(missed.length > 0) msg += `❌ Missed: ${missed.join(', ').replace(/-/g, ' ')}. `;
+    msg += `<br><br>✅ Good practices: Private profiles, Blurring IDs before sharing, Reviewing app permissions, Enabling 2FA.`;
+    fb.innerHTML = msg;
+    scoreDiv.innerHTML = '';
+  }
+});
+
+// QUIZ
+const questions = [
+  { q:'Why is it dangerous to post vacation photos while still on vacation?', opts:['It annoys your followers','It tells potential burglars your home is empty','Friends might feel jealous','Photos use too much storage'], answer:1, explanation:'Posting your exact location and that you\'re away from home signals to criminals that your house is empty — a common tactic used by burglars.' },
+  { q:'What is a "digital footprint"?', opts:['The size of your social media audience','The trail of data you leave online','Your password strength','The number of photos you post'], answer:1, explanation:'Your digital footprint is the permanent record of your online activity — posts, comments, likes, check-ins, and even deleted content may still exist.' },
+  { q:'What should you do before sharing a photo of your boarding pass or ID online?', opts:['Post it as a story only','Blur or crop out sensitive information','Share it only with close friends','Add a filter'], answer:1, explanation:'Boarding passes and IDs contain barcodes, numbers, and personal data that can be exploited. Always blur or crop sensitive information.' },
+  { q:'What is a data broker?', opts:['A person who fixes broken devices','A company that collects and sells your personal information','A social media manager','A type of computer virus'], answer:1, explanation:'Data brokers aggregate information from public records, social media, and purchases, then sell your data to advertisers, insurers, and even scammers.' }
+];
+
+let qIdx = 0;
+let answered = false;
+
+function renderQuizDots(){
+  const el = document.getElementById('quizDots');
+  el.innerHTML = '';
+  questions.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'quiz-prog-dot';
+    if(i < qResults.length){ d.className += qResults[i] ? ' done-ok' : ' done-ng'; }
+    else if(i === qIdx){ d.className += ' current'; }
+    el.appendChild(d);
+  });
+}
+
+function renderQuestion(){
+  const q = questions[qIdx];
+  document.getElementById('quizCounter').textContent = `Question ${qIdx+1} of ${questions.length}`;
+  document.getElementById('quizQ').textContent = q.q;
+  const optsEl = document.getElementById('quizOpts');
+  optsEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => checkAnswer(i));
+    optsEl.appendChild(btn);
+  });
+  document.getElementById('quizFb').style.display = 'none';
+  document.getElementById('quizNextBtn').style.display = 'none';
+  answered = false;
+  renderQuizDots();
+}
+
+function checkAnswer(i){
+  if(answered) return;
+  answered = true;
+  const q = questions[qIdx];
+  const opts = document.querySelectorAll('.quiz-opt');
+  const correct = i === q.answer;
+  opts.forEach((o,idx) => {
+    o.classList.add('answered');
+    if(idx === q.answer) o.classList.add('correct');
+    else if(idx === i && !correct) o.classList.add('wrong');
+  });
+  const fb = document.getElementById('quizFb');
+  fb.style.display = 'block';
+  fb.className = 'quiz-feedback ' + (correct ? 'ok' : 'ng');
+  fb.innerHTML = `<strong>${correct ? '✅ Correct!' : '❌ Incorrect.'}</strong> ${q.explanation}`;
+  if(correct) quizScore++;
+  qResults.push(correct);
+  renderQuizDots();
+  const nb = document.getElementById('quizNextBtn');
+  nb.style.display = 'block';
+  nb.textContent = qIdx < questions.length-1 ? 'Next Question →' : 'See My Score →';
+}
+
+document.getElementById('quizNextBtn').addEventListener('click', () => {
+  qIdx++;
+  if(qIdx < questions.length){ renderQuestion(); }
+  else { showScore(); }
+});
+
+function showScore(){
+  document.getElementById('quizArea').style.display = 'none';
+  const scoreEl = document.getElementById('quizScore');
+  scoreEl.style.display = 'block';
+  document.getElementById('scoreBig').textContent = `${quizScore}/${questions.length}`;
+  if(quizScore >= 3){ earnBadge('badge2'); checkLessonComplete(); }
+  const titles = ['Keep Studying!','Good Effort!','Well Done!','Security Expert! 🏆'];
+  document.getElementById('scoreTitle').textContent = titles[quizScore] || 'Well Done!';
+  document.getElementById('scoreDesc').textContent = quizScore >= 3 ? 'Great job! You understand data privacy. Ready for the final quiz!' : 'Review the privacy tips and try again — your digital footprint matters.';
+}
+
+document.getElementById('retryBtn').addEventListener('click', () => {
+  qIdx = 0; qResults = []; quizScore = 0; answered = false;
+  document.getElementById('quizScore').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'block';
+  renderQuestion();
+});
+
+// GLOSSARY
+document.querySelectorAll('.glossary-term').forEach(term => {
+  term.addEventListener('click', () => {
+    const item = term.parentElement;
+    const wasOpen = item.classList.contains('open');
+    if(!wasOpen) earnBadge('badge4');
+    document.querySelectorAll('.glossary-item').forEach(i => i.classList.remove('open'));
+    if(!wasOpen) item.classList.add('open');
+  });
+});
+
+// BADGES
+let earnedBadges = [];
+function earnBadge(id){
+  if(earnedBadges.includes(id)) return;
+  earnedBadges.push(id);
+  const el = document.getElementById(id);
+  if(el){
+    el.classList.remove('locked');
+    el.classList.add('earned');
+    el.animate([{transform:'scale(1)'},{transform:'scale(1.2)'},{transform:'scale(1)'}], {duration:400});
+  }
+  localStorage.setItem('parryBadges6', JSON.stringify(earnedBadges));
+}
+
+// RESET
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if(confirm('Reset all Lesson 6 progress?')){
+    localStorage.removeItem('parryLesson6Completed');
+    localStorage.removeItem('parryBadges6');
+    location.reload();
+  }
+});
+
+// NEXT - FINAL QUIZ
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if(lesson6Completed) window.location.href = 'quiz.html';
+});
+
+// TIPS
+const tips = [
+  '💡 79% of people overshare online — what you post today could be used against you years later.',
+  '💡 Post vacation photos AFTER returning home, not during the trip.',
+  '💡 Blur or crop boarding passes, IDs, and tickets before sharing online.',
+  '💡 Data brokers collect and sell your information — opt out when possible.',
+  '💡 Google yourself regularly to see what information about you is public.',
+  '💡 Delete old social media accounts you no longer use.',
+  '💡 Your birth date, pet names, and school are security question answers — keep them private.'
+];
+let tipI = 0;
+function nextTip(){
+  tipI = (tipI + 1) % tips.length;
+  const el = document.getElementById('tipText');
+  el.style.opacity = 0;
+  setTimeout(() => { el.textContent = tips[tipI]; el.style.opacity = 1; }, 250);
+}
+document.getElementById('tipNext').addEventListener('click', nextTip);
+setInterval(nextTip, 10000);
+
+// STATS COUNTERS
+function animateCounters(){
+  document.querySelectorAll('[data-counter]').forEach(el => {
+    let target = parseFloat(el.dataset.counter);
+    const suffix = el.dataset.suffix || '';
+    let start = 0;
+    const dur = 1800;
+    const step = 16;
+    const inc = target / (dur / step);
+    const timer = setInterval(() => {
+      start = Math.min(start + inc, target);
+      if(suffix === 'M'){
+        el.textContent = Math.round(start).toLocaleString() + suffix;
+      } else {
+        el.textContent = Math.round(start).toLocaleString() + suffix;
+      }
+      if(start >= target) clearInterval(timer);
+    }, step);
+  });
+}
+
+// INIT
+function loadSavedProgress(){
+  if(localStorage.getItem('parryLesson6Completed') === 'true'){
+    lesson6Completed = true;
+    privacyChecklistCompleted = true;
+    updateProgress(30, true);
+  }
+  const saved = JSON.parse(localStorage.getItem('parryBadges6') || '[]');
+  saved.forEach(id => { if(!earnedBadges.includes(id)) earnBadge(id); });
+}
+
+renderAuth();
+loadSavedProgress();
+renderQuestion();
+setTimeout(animateCounters, 400);
+earnBadge('badge3'); // Data Guardian badge
+
+// Scroll animations
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.style.animationPlayState = 'running'; observer.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.card, .stat-card').forEach(el => {
+  el.style.animationPlayState = 'paused';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

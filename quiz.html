@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parry Security | Final Quiz – 20 Questions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:       #0d9488;
+  --teal-light: #ccfbf1;
+  --navy:       #0f172a;
+  --ink:        #1e293b;
+  --muted:      #64748b;
+  --faint:      #94a3b8;
+  --border:     #e2e8f0;
+  --surface:    #f8fafc;
+  --white:      #ffffff;
+  --red:        #ef4444;
+  --red-light:  #fee2e2;
+  --amber:      #f59e0b;
+  --amber-light:#fef3c7;
+  --green:      #10b981;
+  --green-light:#d1fae5;
+  --indigo:     #6366f1;
+  --indigo-light:#eef2ff;
+  --purple:     #8b5cf6;
+  --purple-light:#ede9fe;
+  --blue:       #3b82f6;
+  --blue-light: #dbeafe;
+  --orange:     #f97316;
+  --orange-light:#ffedd5;
+  --pink:       #ec4899;
+  --pink-light: #fce7f3;
+  --radius-sm:  8px;
+  --radius-md:  14px;
+  --radius-lg:  22px;
+  --shadow-xs:  0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+  --shadow-sm:  0 4px 16px rgba(15,23,42,.07);
+  --shadow-md:  0 8px 32px rgba(15,23,42,.10);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body {
+  font-family:'Figtree',system-ui,sans-serif;
+  background:var(--surface);
+  color:var(--ink);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(13,148,136,.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 110%, rgba(139,92,246,.04) 0%, transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+.container { max-width:1140px; margin:0 auto; padding:0 1.5rem; position:relative; z-index:1; }
+
+/* HEADER */
+.site-header {
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.header-inner {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  padding:.9rem 1.5rem;
+  max-width:1140px;
+  margin:0 auto;
+}
+.logo { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
+.logo-shield {
+  width:40px; height:40px;
+  background:linear-gradient(135deg,var(--teal),var(--purple));
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:1.2rem;
+  animation:shieldPulse 3s ease-in-out infinite;
+}
+@keyframes shieldPulse {
+  0%,100%{ box-shadow:0 0 0 0 rgba(13,148,136,.3); }
+  50%{ box-shadow:0 0 0 8px rgba(13,148,136,0); }
+}
+.logo-text h1 { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:700; color:var(--navy); }
+.logo-text p  { font-size:.68rem; color:var(--muted); }
+
+.header-meta { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+.quiz-badge {
+  background:linear-gradient(135deg,var(--teal),var(--purple));
+  color:#fff;
+  font-size:.72rem; font-weight:600;
+  padding:.3rem .8rem; border-radius:40px;
+}
+.reading-time { font-size:.72rem; color:var(--muted); }
+
+.user-pill {
+  display:flex; align-items:center; gap:.5rem;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:40px; padding:.25rem .25rem .25rem .25rem;
+}
+.user-avatar {
+  width:30px; height:30px; border-radius:50%;
+  background:linear-gradient(135deg,var(--teal),var(--purple));
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:.7rem; font-weight:700;
+}
+.user-name { font-size:.78rem; font-weight:600; padding-right:.5rem; }
+.btn-auth {
+  padding:.42rem 1.1rem; border-radius:40px;
+  font-size:.78rem; font-weight:600; cursor:pointer;
+  text-decoration:none; transition:all .25s; border:none;
+}
+.btn-ghost { background:transparent; border:1.5px solid var(--teal); color:var(--teal); }
+.btn-ghost:hover { background:var(--teal); color:#fff; }
+.btn-solid { background:var(--teal); color:#fff; }
+.btn-solid:hover { background:#0f766e; }
+.btn-out { background:transparent; border:1px solid var(--border); color:var(--muted); font-size:.68rem; padding:.22rem .7rem; }
+
+/* PROGRESS */
+.progress-strip {
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  padding:.7rem 1.5rem;
+}
+.prog-inner { max-width:1140px; margin:0 auto; display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap; }
+.prog-label { font-size:.72rem; font-weight:600; color:var(--muted); white-space:nowrap; }
+.prog-track { flex:1; background:var(--border); border-radius:20px; height:5px; overflow:hidden; }
+.prog-fill {
+  height:100%; border-radius:20px;
+  background:linear-gradient(90deg,var(--teal),var(--purple));
+  width:0%; transition:width .8s cubic-bezier(.4,0,.2,1);
+}
+.prog-steps { display:flex; gap:.5rem; flex-wrap:wrap; }
+.prog-step {
+  font-size:.65rem; font-weight:600; padding:.2rem .55rem;
+  border-radius:20px; background:var(--surface); color:var(--faint);
+  border:1px solid var(--border); transition:all .3s;
+}
+.prog-step.done { background:var(--green-light); color:#065f46; border-color:#a7f3d0; }
+.prog-step.active { background:var(--teal); color:#fff; border-color:var(--teal); }
+
+/* QUIZ HERO */
+.quiz-hero {
+  padding:2rem 0 1rem;
+  text-align:center;
+}
+.hero-title {
+  font-family:'Sora',sans-serif;
+  font-size:1.8rem;
+  font-weight:800;
+  background:linear-gradient(135deg,var(--teal),var(--purple));
+  background-clip:text;
+  -webkit-background-clip:text;
+  color:transparent;
+}
+.hero-subtitle {
+  color:var(--muted);
+  margin-top:.5rem;
+}
+.warning-box {
+  background:var(--amber-light);
+  border-left:4px solid var(--amber);
+  padding:1rem;
+  border-radius:var(--radius-sm);
+  margin:1rem 0;
+  font-size:.85rem;
+}
+
+/* QUIZ MAIN CARD */
+.quiz-card {
+  background:var(--white);
+  border-radius:var(--radius-lg);
+  padding:2rem;
+  margin-bottom:2rem;
+  box-shadow:var(--shadow-md);
+  border:1px solid var(--border);
+}
+.quiz-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:1.5rem;
+  padding-bottom:1rem;
+  border-bottom:2px solid var(--border);
+  flex-wrap:wrap;
+  gap:1rem;
+}
+.quiz-title {
+  font-family:'Sora',sans-serif;
+  font-size:1.2rem;
+  font-weight:700;
+  color:var(--navy);
+}
+.quiz-counter {
+  background:var(--surface);
+  padding:.3rem .8rem;
+  border-radius:40px;
+  font-size:.75rem;
+  font-weight:600;
+  color:var(--muted);
+}
+.quiz-question {
+  font-family:'Sora',sans-serif;
+  font-size:1.1rem;
+  font-weight:600;
+  margin-bottom:1.5rem;
+  color:var(--navy);
+  line-height:1.5;
+}
+.quiz-options {
+  display:flex;
+  flex-direction:column;
+  gap:.8rem;
+  margin-bottom:1.5rem;
+}
+.quiz-opt {
+  padding:1rem 1.2rem;
+  border-radius:var(--radius-sm);
+  border:2px solid var(--border);
+  background:var(--white);
+  cursor:pointer;
+  font-size:.9rem;
+  text-align:left;
+  transition:all .2s;
+  font-family:'Figtree',sans-serif;
+  display:flex;
+  align-items:center;
+  gap:.8rem;
+}
+.quiz-opt:hover:not(.answered) {
+  border-color:var(--teal);
+  background:var(--teal-light);
+  transform:translateX(5px);
+}
+.quiz-opt.correct {
+  border-color:var(--green);
+  background:var(--green-light);
+}
+.quiz-opt.wrong {
+  border-color:var(--red);
+  background:var(--red-light);
+}
+.quiz-opt::before {
+  content:'○';
+  color:var(--faint);
+  font-size:1rem;
+}
+.quiz-opt.correct::before {
+  content:'✓';
+  color:var(--green);
+  font-weight:700;
+}
+.quiz-opt.wrong::before {
+  content:'✗';
+  color:var(--red);
+  font-weight:700;
+}
+.quiz-feedback {
+  padding:1rem;
+  border-radius:var(--radius-sm);
+  font-size:.85rem;
+  margin-bottom:1.5rem;
+  display:none;
+  animation:fadeIn .3s;
+}
+.quiz-feedback.correct {
+  background:var(--green-light);
+  border-left:4px solid var(--green);
+}
+.quiz-feedback.incorrect {
+  background:var(--red-light);
+  border-left:4px solid var(--red);
+}
+.quiz-nav {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:1rem;
+  flex-wrap:wrap;
+}
+.btn-prev {
+  background:var(--white);
+  border:2px solid var(--border);
+  color:var(--muted);
+  padding:.7rem 1.5rem;
+  border-radius:40px;
+  font-size:.85rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+}
+.btn-prev:hover:not(:disabled) {
+  border-color:var(--teal);
+  color:var(--teal);
+}
+.btn-prev:disabled {
+  opacity:.4;
+  cursor:not-allowed;
+}
+.btn-next {
+  background:linear-gradient(135deg,var(--teal),var(--purple));
+  color:#fff;
+  border:none;
+  padding:.7rem 2rem;
+  border-radius:40px;
+  font-size:.85rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+}
+.btn-next:hover:not(:disabled) {
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-sm);
+}
+.btn-next:disabled {
+  opacity:.5;
+  cursor:not-allowed;
+}
+.progress-dots {
+  display:flex;
+  gap:.4rem;
+  flex-wrap:wrap;
+  margin-top:1rem;
+  justify-content:center;
+}
+.prog-dot {
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--border);
+  transition:all .3s;
+}
+.prog-dot.answered {
+  background:var(--teal);
+}
+.prog-dot.current {
+  background:var(--purple);
+  transform:scale(1.3);
+}
+.prog-dot.correct-answer {
+  background:var(--green);
+}
+.prog-dot.wrong-answer {
+  background:var(--red);
+}
+
+/* CUSTOM ALERT MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+.modal-container {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  max-width: 450px;
+  width: 90%;
+  padding: 1.8rem;
+  text-align: center;
+  animation: modalPop 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+}
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.modal-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+.modal-container h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: var(--navy);
+}
+.modal-container p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+.modal-btn {
+  background: linear-gradient(135deg, var(--teal), var(--purple));
+  color: white;
+  border: none;
+  padding: 0.7rem 1.8rem;
+  border-radius: 40px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.modal-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* RESULTS SECTION */
+.results-card {
+  background:var(--white);
+  border-radius:var(--radius-lg);
+  padding:2rem;
+  margin-bottom:2rem;
+  text-align:center;
+  box-shadow:var(--shadow-md);
+  border:1px solid var(--border);
+  display:none;
+}
+.score-circle {
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--teal),var(--purple));
+  margin:1.5rem auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:2.5rem;
+  font-weight:800;
+}
+.message-box {
+  padding:1.2rem;
+  border-radius:var(--radius-md);
+  margin:1.5rem 0;
+  font-weight:600;
+  font-size:1.1rem;
+}
+.message-box.champion {
+  background:linear-gradient(135deg,var(--green-light),var(--teal-light));
+  color:#065f46;
+}
+.message-box.star {
+  background:linear-gradient(135deg,var(--blue-light),var(--indigo-light));
+  color:#1e40af;
+}
+.message-box.pass {
+  background:linear-gradient(135deg,var(--amber-light),#fef3c7);
+  color:#92400e;
+}
+.message-box.fail {
+  background:var(--red-light);
+  color:#991b1b;
+}
+.breakdown-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:.8rem;
+  margin:1.5rem 0;
+  text-align:left;
+}
+.breakdown-item {
+  padding:.8rem;
+  background:var(--surface);
+  border-radius:var(--radius-sm);
+  border-left:3px solid var(--teal);
+}
+.breakdown-topic {
+  font-size:.7rem;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+.breakdown-score {
+  font-size:1.2rem;
+  font-weight:700;
+  color:var(--navy);
+}
+.action-buttons {
+  display:flex;
+  justify-content:center;
+  gap:1rem;
+  margin-top:1.5rem;
+  flex-wrap:wrap;
+}
+.btn-retake {
+  background:var(--white);
+  border:2px solid var(--border);
+  color:var(--muted);
+  padding:.8rem 1.8rem;
+  border-radius:40px;
+  font-weight:600;
+  cursor:pointer;
+}
+.btn-retake:hover {
+  border-color:var(--teal);
+  color:var(--teal);
+}
+.btn-certificate {
+  background:linear-gradient(135deg,var(--teal),var(--purple));
+  color:#fff;
+  border:none;
+  padding:.8rem 1.8rem;
+  border-radius:40px;
+  font-weight:600;
+  cursor:pointer;
+  text-decoration:none;
+}
+.btn-certificate:hover {
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-sm);
+}
+
+footer {
+  background:var(--white);
+  border-top:1px solid var(--border);
+  padding:1.5rem;
+  text-align:center;
+  font-size:.72rem;
+  color:var(--faint);
+}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(-10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes confetti{
+  0%{transform:translateY(0) rotate(0deg);opacity:1;}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0;}
+}
+@media(max-width:600px){
+  .header-inner{flex-wrap:wrap;}
+  .header-meta{flex-wrap:wrap;gap:.5rem;}
+  .quiz-card{padding:1.2rem;}
+  .quiz-question{font-size:1rem;}
+  .quiz-opt{padding:.8rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <div class="logo-shield">🛡️</div>
+      <div class="logo-text">
+        <h1>Parry Security</h1>
+        <p>Your Digital Shield – Empowering Safe Online Choices</p>
+      </div>
+    </a>
+    <div class="header-meta">
+      <span class="quiz-badge">🎓 Final Assessment</span>
+      <span class="reading-time">📝 20 Questions</span>
+      <div id="authArea"></div>
+    </div>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-strip">
+  <div class="prog-inner">
+    <span class="prog-label">Training Progress</span>
+    <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+    <span class="prog-label" id="progPct">0%</span>
+    <div class="prog-steps">
+      <span class="prog-step done" id="st1">✓ L1</span>
+      <span class="prog-step done" id="st2">✓ L2</span>
+      <span class="prog-step done" id="st3">✓ L3</span>
+      <span class="prog-step done" id="st4">✓ L4</span>
+      <span class="prog-step done" id="st5">✓ L5</span>
+      <span class="prog-step done" id="st6">✓ L6</span>
+      <span class="prog-step active" id="stQ">Quiz</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- QUIZ HERO -->
+<div class="quiz-hero">
+  <h1 class="hero-title">🎓 Final Knowledge Quiz</h1>
+  <p class="hero-subtitle">Test your understanding of all 6 cyber safety modules</p>
+  <div class="warning-box">
+    <strong>⚠️ Important:</strong> This quiz has 20 questions covering Phishing, Social Engineering, Risky Behaviour, Password Security, Public Wi‑Fi, and Data Privacy. You need <strong>20/20 (100%)</strong> to earn your certificate.
+  </div>
+</div>
+
+<!-- QUIZ CARD -->
+<div class="quiz-card" id="quizCard">
+  <div class="quiz-header">
+    <span class="quiz-title">📝 Question <span id="questionNum">1</span>/<span id="totalQuestions">20</span></span>
+    <span class="quiz-counter">Parry Security Certification</span>
+  </div>
+  <div class="quiz-question" id="questionText">Loading...</div>
+  <div class="quiz-options" id="optionsContainer"></div>
+  <div class="quiz-feedback" id="feedbackArea"></div>
+  <div class="quiz-nav">
+    <button class="btn-prev" id="prevBtn" disabled>← Previous</button>
+    <button class="btn-next" id="nextBtn">Next →</button>
+  </div>
+  <div class="progress-dots" id="progressDots"></div>
+</div>
+
+<!-- RESULTS CARD -->
+<div class="results-card" id="resultsCard">
+  <h2>🎉 Quiz Complete!</h2>
+  <div class="score-circle" id="scoreCircle">0/20</div>
+  <div class="message-box" id="messageBox"></div>
+  
+  <h3 style="margin-bottom:1rem;">📊 Performance by Topic</h3>
+  <div class="breakdown-grid" id="breakdownGrid"></div>
+  
+  <div class="action-buttons">
+    <button class="btn-retake" id="retakeBtn">↩ Retake Quiz</button>
+    <button class="btn-certificate" id="certificateBtn">🏆 Get Certificate →</button>
+  </div>
+</div>
+
+</div>
+
+<footer>🛡️ Parry Security – Cyber Safety Training &nbsp;|&nbsp; Final Quiz: 20 Questions &nbsp;|&nbsp; Score 20/20 to earn your certificate</footer>
+
+<!-- CUSTOM ALERT MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-container">
+    <div class="modal-icon" id="modalIcon">⚠️</div>
+    <h3 id="modalTitle">Alert</h3>
+    <p id="modalMessage">This is a custom alert message.</p>
+    <button class="modal-btn" id="modalCloseBtn">OK, Got it</button>
+  </div>
+</div>
+
+<script>
+// ============================================
+// CUSTOM ALERT FUNCTION
+// ============================================
+function showCustomAlert(title, message, icon = '⚠️') {
+  const modal = document.getElementById('modalOverlay');
+  const modalIcon = document.getElementById('modalIcon');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalMessage = document.getElementById('modalMessage');
+  
+  modalIcon.textContent = icon;
+  modalTitle.textContent = title;
+  modalMessage.innerHTML = message;
+  modal.classList.add('active');
+  
+  // Close button event
+  const closeBtn = document.getElementById('modalCloseBtn');
+  const newCloseBtn = closeBtn.cloneNode(true);
+  closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+  newCloseBtn.addEventListener('click', () => {
+    modal.classList.remove('active');
+  });
+  
+  // Click outside to close
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) {
+      modal.classList.remove('active');
+    }
+  });
+}
+
+// ============================================
+// 20 COMPREHENSIVE QUESTIONS
+// ============================================
+const questions = [
+  // Lesson 1: Phishing (Questions 1-4)
+  { topic: "Phishing", text: "Which of the following is a clear sign of a phishing email?", options: ["Your full name in the greeting", "Urgent threatening language like 'Your account will be closed TODAY'", "Professional signature with contact details", "A PDF attachment of your monthly statement"], correct: 1, explanation: "Urgent threatening language is a classic phishing tactic designed to make you act without thinking. Legitimate companies don't threaten to close accounts instantly." },
+  { topic: "Phishing", text: "You receive an email from 'security@paypa1.com' saying your PayPal account is limited. What is the BEST action?", options: ["Click the verification link immediately", "Reply with your password to verify", "Hover over the link, check the URL, then go to PayPal directly", "Forward the email to your friends"], correct: 2, explanation: "The domain 'paypa1.com' is a typosquatted fake. Always go directly to the official website by typing the address yourself." },
+  { topic: "Phishing", text: "What is 'typosquatting'?", options: ["A typing exercise game", "Registering domains that are common misspellings of real domains (e.g., 'g00gle.com')", "A type of keyboard malware", "A password cracking technique"], correct: 1, explanation: "Attackers register domains like 'faceb00k.com' hoping users will mistype — a common phishing technique." },
+  { topic: "Phishing", text: "What should you do BEFORE clicking a link in an email?", options: ["Nothing — just click if it looks legitimate", "Hover over it to see the real destination URL", "Copy and paste it into a Word document", "Reply to the sender to confirm"], correct: 1, explanation: "Hovering over a link reveals the actual URL, allowing you to spot fake or mismatched domains before clicking." },
+  
+  // Lesson 2: Social Engineering (Questions 5-8)
+  { topic: "Social Engineering", text: "You receive a call from 'Microsoft Support' saying your computer has a virus. They ask for remote access. What should you do?", options: ["Give them remote access immediately", "Ask them for proof of identity", "Hang up and call Microsoft using their official number", "Buy the software they recommend"], correct: 2, explanation: "Microsoft never makes unsolicited support calls. Hang up and call the official number to verify." },
+  { topic: "Social Engineering", text: "What is 'vishing'?", options: ["Phishing via email", "Phishing via SMS text", "Phishing via phone call", "Phishing via social media DMs"], correct: 2, explanation: "Vishing = Voice phishing. Attackers use phone calls to create urgency and pressure you into revealing information." },
+  { topic: "Social Engineering", text: "A friend messages you on social media: 'I'm stuck abroad! Send me $500 via gift cards.' What's the SAFEST response?", options: ["Send money immediately to help", "Ask a personal question only they would know, then call them directly", "Ignore the message completely", "Post about it on your timeline"], correct: 1, explanation: "Friend-in-distress scams are common — hackers often take over accounts. Verify by calling your friend using a known phone number." },
+  { topic: "Social Engineering", text: "What is 'pretexting' in social engineering?", options: ["A fake text message", "Creating a fabricated scenario to extract information", "A type of computer virus", "A password management technique"], correct: 1, explanation: "Pretexting involves creating a fake scenario (pretext) — impersonating IT support, bank officials, or police — to trick victims into revealing information." },
+  
+  // Lesson 3: Risky Behaviour (Questions 9-12)
+  { topic: "Risky Behaviour", text: "Which online behaviour puts you at HIGHEST risk?", options: ["Using a password manager", "Enabling Two-Factor Authentication", "Using the same password for banking AND social media", "Updating software regularly"], correct: 2, explanation: "Password reuse is extremely dangerous! If one account is breached, attackers try that password everywhere else (credential stuffing)." },
+  { topic: "Risky Behaviour", text: "What percentage of data breaches involve human error?", options: ["32%", "51%", "67%", "82%"], correct: 3, explanation: "82% of data breaches involve human error — your daily habits matter more than any security software." },
+  { topic: "Risky Behaviour", text: "What should you do BEFORE posting vacation photos online?", options: ["Post them daily with your exact location", "Wait until you return home to share them", "Tag your home address in the photos", "Post them on multiple platforms at once"], correct: 1, explanation: "Posting while away tells everyone your home is empty. Wait until you return to share vacation memories." },
+  { topic: "Risky Behaviour", text: "Why is clicking 'Remind me later' on software updates dangerous?", options: ["Updates are optional", "Security patches fix known vulnerabilities that hackers actively exploit", "Updates cost money after a while", "Updates slow down your computer"], correct: 1, explanation: "Cybercriminals reverse-engineer security patches to exploit unpatched systems. Delaying updates keeps known vulnerabilities open." },
+  
+  // Lesson 4: Password Security (Questions 13-15)
+  { topic: "Password Security", text: "What is the most important factor for a strong password?", options: ["Using special characters like !@#$", "Making it at least 12-15 characters long", "Changing it every 30 days", "Using a mix of uppercase and lowercase"], correct: 1, explanation: "Length is the most important factor. A 15-character passphrase is exponentially harder to crack than an 8-character complex password." },
+  { topic: "Password Security", text: "What is credential stuffing?", options: ["Storing passwords in a spreadsheet", "An automated attack using stolen passwords from one breach to try logging into other services", "A password manager feature", "Changing passwords regularly"], correct: 1, explanation: "Credential stuffing uses automated tools to try stolen username/password pairs across hundreds of sites — why password reuse is dangerous." },
+  { topic: "Password Security", text: "What is the BEST example of a strong password?", options: ["P@ssw0rd123", "MyBirthday1990", "correct-horse-battery-staple", "qwertyuiop"], correct: 2, explanation: "'correct-horse-battery-staple' is a long passphrase (30+ characters) that's memorable but nearly impossible to crack. Length beats complexity." },
+  
+  // Lesson 5: Public Wi-Fi & Mobile (Questions 16-17)
+  { topic: "Public Wi-Fi", text: "What is the primary security risk of using public Wi-Fi without protection?", options: ["Slow internet speeds", "Man-in-the-Middle attacks can intercept your data", "Your device battery drains faster", "Websites load incorrectly"], correct: 1, explanation: "Attackers on the same network can intercept your unencrypted traffic, capturing passwords, emails, and even banking information." },
+  { topic: "Public Wi-Fi", text: "What is the BEST way to access sensitive accounts when away from home?", options: ["Connect to the strongest public Wi-Fi signal", "Use your phone's mobile hotspot / cellular data", "Wait until you get home", "Use a free VPN from the app store"], correct: 1, explanation: "Your mobile data is encrypted by default and much more secure than public Wi-Fi. If you must use public Wi-Fi, use a reputable VPN." },
+  
+  // Lesson 6: Data Privacy (Questions 18-20)
+  { topic: "Data Privacy", text: "Why is it dangerous to post vacation photos while still on vacation?", options: ["It annoys your followers", "It tells potential burglars your home is empty", "Friends might feel jealous", "Photos use too much storage"], correct: 1, explanation: "Posting your exact location and that you're away from home signals to criminals that your house is empty — a common tactic used by burglars." },
+  { topic: "Data Privacy", text: "What is a 'digital footprint'?", options: ["The size of your social media audience", "The trail of data you leave online", "Your password strength", "The number of photos you post"], correct: 1, explanation: "Your digital footprint is the permanent record of your online activity — posts, comments, likes, check-ins, and even deleted content may still exist." },
+  { topic: "Data Privacy", text: "What is a data broker?", options: ["A person who fixes broken devices", "A company that collects and sells your personal information", "A social media manager", "A type of computer virus"], correct: 1, explanation: "Data brokers aggregate information from public records, social media, and purchases, then sell your data to advertisers, insurers, and even scammers." }
+];
+
+const totalQuestions = questions.length;
+let currentIndex = 0;
+let userAnswers = new Array(totalQuestions).fill(null);
+let quizCompleted = false;
+let lessonsCompleted = {1: false, 2: false, 3: false, 4: false, 5: false, 6: false};
+
+// AUTH
+function renderAuth(){
+  const el = document.getElementById('authArea');
+  const u = (() => { try{ return JSON.parse(localStorage.getItem('parryCurrentUser')); } catch(e){ return null; } })();
+  if(u){
+    const n = u.fullName.split(' ')[0];
+    el.innerHTML = `<div class="user-pill"><div class="user-avatar">${n[0].toUpperCase()}</div><span class="user-name">${n}</span><button class="btn-auth btn-out" onclick="doLogout()">Logout</button></div>`;
+  } else {
+    el.innerHTML = `<a href="login.html" class="btn-auth btn-ghost">Login</a><a href="index.html" class="btn-auth btn-solid">Sign Up</a>`;
+  }
+}
+function doLogout(){ localStorage.removeItem('parryCurrentUser'); location.reload(); }
+
+// PROGRESS
+function updateTrainingProgress(){
+  let completed = 0;
+  for(let i=1; i<=6; i++){
+    if(localStorage.getItem(`parryLesson${i}Completed`) === 'true'){
+      lessonsCompleted[i] = true;
+      completed++;
+    }
+  }
+  const totalPercent = Math.round((completed / 6) * 100);
+  document.getElementById('progFill').style.width = totalPercent + '%';
+  document.getElementById('progPct').textContent = totalPercent + '%';
+  
+  if(!localStorage.getItem('parryLesson6Completed')){
+    const warning = document.createElement('div');
+    warning.style.cssText = 'background:var(--amber-light); padding:1rem; border-radius:var(--radius-md); margin-bottom:1rem; text-align:center; border-left:4px solid var(--amber);';
+    warning.innerHTML = '⚠️ <strong>Note:</strong> Please complete all 6 lessons before taking the final quiz for the best experience.';
+    const quizCard = document.getElementById('quizCard');
+    if(quizCard && !document.querySelector('.quiz-warning')) quizCard.insertBefore(warning, quizCard.firstChild);
+    if(warning) warning.classList.add('quiz-warning');
+  }
+}
+
+function renderProgressDots(){
+  const container = document.getElementById('progressDots');
+  container.innerHTML = '';
+  for(let i=0; i<totalQuestions; i++){
+    const dot = document.createElement('div');
+    dot.className = 'prog-dot';
+    if(userAnswers[i] !== null) dot.classList.add('answered');
+    if(i === currentIndex) dot.classList.add('current');
+    if(userAnswers[i] !== null){
+      const isCorrect = (userAnswers[i] === questions[i].correct);
+      if(isCorrect) dot.classList.add('correct-answer');
+      else dot.classList.add('wrong-answer');
+    }
+    container.appendChild(dot);
+  }
+}
+
+function renderQuestion(){
+  const q = questions[currentIndex];
+  document.getElementById('questionNum').textContent = currentIndex + 1;
+  document.getElementById('totalQuestions').textContent = totalQuestions;
+  document.getElementById('questionText').textContent = q.text;
+  
+  const optionsContainer = document.getElementById('optionsContainer');
+  optionsContainer.innerHTML = '';
+  
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    if(userAnswers[currentIndex] === idx){
+      btn.classList.add('answered');
+      const isCorrect = (idx === q.correct);
+      if(isCorrect) btn.classList.add('correct');
+      else btn.classList.add('wrong');
+    }
+    btn.textContent = opt;
+    btn.addEventListener('click', () => selectAnswer(idx));
+    optionsContainer.appendChild(btn);
+  });
+  
+  document.getElementById('feedbackArea').style.display = 'none';
+  document.getElementById('prevBtn').disabled = (currentIndex === 0);
+  
+  const nextBtn = document.getElementById('nextBtn');
+  if(currentIndex === totalQuestions - 1){
+    nextBtn.textContent = 'Finish Quiz →';
+  } else {
+    nextBtn.textContent = 'Next →';
+  }
+  
+  renderProgressDots();
+}
+
+function selectAnswer(selectedIdx){
+  if(userAnswers[currentIndex] !== null) return;
+  
+  const q = questions[currentIndex];
+  const isCorrect = (selectedIdx === q.correct);
+  userAnswers[currentIndex] = selectedIdx;
+  
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts.forEach((opt, idx) => {
+    opt.classList.add('answered');
+    if(idx === q.correct) opt.classList.add('correct');
+    if(idx === selectedIdx && !isCorrect) opt.classList.add('wrong');
+  });
+  
+  const feedback = document.getElementById('feedbackArea');
+  feedback.style.display = 'block';
+  feedback.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  feedback.innerHTML = `<strong>${isCorrect ? '✅ Correct!' : '❌ Incorrect.'}</strong> ${q.explanation}`;
+  
+  renderProgressDots();
+  
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.disabled = false;
+}
+
+function nextQuestion(){
+  if(userAnswers[currentIndex] === null){
+    showCustomAlert(
+      '⚠️ Answer Required', 
+      'Please select an answer before continuing to the next question.<br><br>Your progress is saved automatically as you answer.',
+      '❓'
+    );
+    return;
+  }
+  
+  if(currentIndex < totalQuestions - 1){
+    currentIndex++;
+    renderQuestion();
+    document.getElementById('nextBtn').disabled = (userAnswers[currentIndex] !== null);
+  } else {
+    showResults();
+  }
+}
+
+function prevQuestion(){
+  if(currentIndex > 0){
+    currentIndex--;
+    renderQuestion();
+  }
+}
+
+function calculateScore(){
+  let correct = 0;
+  for(let i=0; i<totalQuestions; i++){
+    if(userAnswers[i] !== null && userAnswers[i] === questions[i].correct){
+      correct++;
+    }
+  }
+  return correct;
+}
+
+function getTopicBreakdown(){
+  const topics = {};
+  for(let i=0; i<totalQuestions; i++){
+    const topic = questions[i].topic;
+    if(!topics[topic]) topics[topic] = {total:0, correct:0};
+    topics[topic].total++;
+    if(userAnswers[i] !== null && userAnswers[i] === questions[i].correct){
+      topics[topic].correct++;
+    }
+  }
+  return topics;
+}
+
+function showResults(){
+  const score = calculateScore();
+  const percentage = Math.round((score / totalQuestions) * 100);
+  const passed = score >= 15;
+  
+  document.getElementById('quizCard').style.display = 'none';
+  document.getElementById('resultsCard').style.display = 'block';
+  document.getElementById('scoreCircle').innerHTML = `${score}/${totalQuestions}<br><span style="font-size:.8rem;">${percentage}%</span>`;
+  
+  const messageBox = document.getElementById('messageBox');
+  let message = '';
+  let messageClass = '';
+  
+  if(score === 20){
+    message = '🎉🏆 PERFECT SCORE! Cybersecurity Champion! 🏆🎉<br>You have mastered all cyber safety concepts! You can now claim your certificate.';
+    messageClass = 'champion';
+    showConfetti();
+  } else if(score >= 18){
+    message = '🌟 EXCELLENT! You\'re a Security Expert! 🌟<br>Great understanding of online safety practices. Take the quiz again to get 20/20 for your certificate.';
+    messageClass = 'champion';
+  } else if(score >= 15){
+    message = '✅ GOOD JOB! You passed the quiz!<br>You have solid cyber safety knowledge. Review the missed questions and retake to score 20/20 for your certificate.';
+    messageClass = 'star';
+  } else if(score >= 12){
+    message = '📚 KEEP LEARNING! You\'re close to passing.<br>Review the lessons and try again to score 20/20 for your certificate.';
+    messageClass = 'pass';
+  } else {
+    message = '⚠️ NEEDS IMPROVEMENT. Please review all 6 lessons and retake the quiz.<br>Cyber safety is important — keep learning to achieve 20/20!';
+    messageClass = 'fail';
+  }
+  messageBox.className = `message-box ${messageClass}`;
+  messageBox.innerHTML = message;
+  
+  const breakdown = getTopicBreakdown();
+  const breakdownGrid = document.getElementById('breakdownGrid');
+  breakdownGrid.innerHTML = '';
+  const topicColors = {
+    'Phishing': 'var(--blue)',
+    'Social Engineering': 'var(--purple)',
+    'Risky Behaviour': 'var(--orange)',
+    'Password Security': 'var(--teal)',
+    'Public Wi-Fi': 'var(--pink)',
+    'Data Privacy': 'var(--indigo)'
+  };
+  for(const [topic, data] of Object.entries(breakdown)){
+    const percent = Math.round((data.correct / data.total) * 100);
+    breakdownGrid.innerHTML += `
+      <div class="breakdown-item" style="border-left-color: ${topicColors[topic] || 'var(--teal)'}">
+        <div class="breakdown-topic">${topic}</div>
+        <div class="breakdown-score">${data.correct}/${data.total} (${percent}%)</div>
+      </div>
+    `;
+  }
+  
+  // Save quiz results
+  localStorage.setItem('parryQuizScore', score);
+  localStorage.setItem('parryQuizTotal', totalQuestions);
+  localStorage.setItem('parryQuizPassed', passed);
+  
+  if(passed){
+    updateTrainingProgress();
+    const currentProgress = parseInt(document.getElementById('progPct').textContent);
+    if(currentProgress < 100){
+      document.getElementById('progFill').style.width = '100%';
+      document.getElementById('progPct').textContent = '100%';
+    }
+  }
+}
+
+function showConfetti(){
+  const colors = ['#0d9488', '#8b5cf6', '#ec4899', '#f97316', '#3b82f6'];
+  for(let i=0; i<150; i++){
+    const confetti = document.createElement('div');
+    confetti.style.position = 'fixed';
+    confetti.style.width = '10px';
+    confetti.style.height = '10px';
+    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    confetti.style.left = Math.random() * 100 + '%';
+    confetti.style.top = '-10px';
+    confetti.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    confetti.style.pointerEvents = 'none';
+    confetti.style.zIndex = '9999';
+    confetti.style.animation = `confetti ${Math.random() * 2 + 2}s linear forwards`;
+    document.body.appendChild(confetti);
+    setTimeout(() => confetti.remove(), 3000);
+  }
+}
+
+function retakeQuiz(){
+  userAnswers = new Array(totalQuestions).fill(null);
+  currentIndex = 0;
+  quizCompleted = false;
+  document.getElementById('quizCard').style.display = 'block';
+  document.getElementById('resultsCard').style.display = 'none';
+  renderQuestion();
+}
+
+function goToCertificate(){
+  const score = calculateScore();
+  
+  // 🔐 PERFECT SCORE CHECK - Only 20/20 can get certificate
+  if(score !== 20) { 
+    showCustomAlert(
+      '🎓 Certificate Restricted', 
+      `You scored <strong>${score}/20</strong>.<br><br>The Certificate of Completion is only awarded for a <strong>PERFECT SCORE (20/20)</strong>.<br><br>Please review all 6 lessons and retake the quiz to achieve a perfect score.`,
+      '🏆'
+    );
+    return; 
+  }
+  
+  localStorage.setItem('parryQuizScore', score);
+  localStorage.setItem('parryQuizTotal', totalQuestions);
+  window.location.href = 'certificate.html';
+}
+
+document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+document.getElementById('retakeBtn').addEventListener('click', retakeQuiz);
+document.getElementById('certificateBtn').addEventListener('click', goToCertificate);
+
+// INIT
+renderAuth();
+updateTrainingProgress();
+renderQuestion();
+</script>
+</body>
+</html>

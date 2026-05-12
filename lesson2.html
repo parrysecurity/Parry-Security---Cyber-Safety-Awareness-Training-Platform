@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parry Security | Lesson 2 – Social Engineering & Impersonation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:       #0d9488;
+  --teal-light: #ccfbf1;
+  --teal-mid:   #14b8a6;
+  --navy:       #0f172a;
+  --ink:        #1e293b;
+  --muted:      #64748b;
+  --faint:      #94a3b8;
+  --border:     #e2e8f0;
+  --surface:    #f8fafc;
+  --white:      #ffffff;
+  --red:        #ef4444;
+  --red-light:  #fee2e2;
+  --amber:      #f59e0b;
+  --amber-light:#fef3c7;
+  --green:      #10b981;
+  --green-light:#d1fae5;
+  --indigo:     #6366f1;
+  --indigo-light:#eef2ff;
+  --purple:     #8b5cf6;
+  --purple-light:#ede9fe;
+  --radius-sm:  8px;
+  --radius-md:  14px;
+  --radius-lg:  22px;
+  --shadow-xs:  0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+  --shadow-sm:  0 4px 16px rgba(15,23,42,.07);
+  --shadow-md:  0 8px 32px rgba(15,23,42,.10);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body {
+  font-family:'Figtree',system-ui,sans-serif;
+  background:var(--surface);
+  color:var(--ink);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(139,92,246,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 110%, rgba(13,148,136,.05) 0%, transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+.container { max-width:1140px; margin:0 auto; padding:0 1.5rem; position:relative; z-index:1; }
+
+/* HEADER */
+.site-header {
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.header-inner {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  padding:.9rem 1.5rem;
+  max-width:1140px;
+  margin:0 auto;
+}
+.logo { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
+.logo-shield {
+  width:40px; height:40px;
+  background:linear-gradient(135deg,var(--purple),var(--teal));
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:1.2rem;
+  animation:shieldPulse 3s ease-in-out infinite;
+}
+@keyframes shieldPulse {
+  0%,100%{ box-shadow:0 0 0 0 rgba(139,92,246,.3); }
+  50%{ box-shadow:0 0 0 8px rgba(139,92,246,0); }
+}
+.logo-text h1 { font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:700; color:var(--navy); }
+.logo-text p  { font-size:.68rem; color:var(--muted); }
+
+.header-meta { display:flex; align-items:center; gap:1rem; }
+.lesson-badge {
+  background:var(--purple-light);
+  color:var(--purple);
+  font-size:.72rem; font-weight:600;
+  padding:.3rem .8rem; border-radius:40px;
+}
+.reading-time { font-size:.72rem; color:var(--muted); }
+
+.user-pill {
+  display:flex; align-items:center; gap:.5rem;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:40px; padding:.25rem .25rem .25rem .25rem;
+}
+.user-avatar {
+  width:30px; height:30px; border-radius:50%;
+  background:linear-gradient(135deg,var(--purple),var(--teal));
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:.7rem; font-weight:700;
+}
+.user-name { font-size:.78rem; font-weight:600; padding-right:.5rem; }
+.btn-auth {
+  padding:.42rem 1.1rem; border-radius:40px;
+  font-size:.78rem; font-weight:600; cursor:pointer;
+  text-decoration:none; transition:all .25s; border:none;
+}
+.btn-ghost { background:transparent; border:1.5px solid var(--purple); color:var(--purple); }
+.btn-ghost:hover { background:var(--purple); color:#fff; }
+.btn-solid { background:var(--purple); color:#fff; }
+.btn-solid:hover { background:#7c3aed; }
+.btn-out { background:transparent; border:1px solid var(--border); color:var(--muted); font-size:.68rem; padding:.22rem .7rem; }
+
+/* PROGRESS */
+.progress-strip {
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  padding:.7rem 1.5rem;
+}
+.prog-inner { max-width:1140px; margin:0 auto; display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap; }
+.prog-label { font-size:.72rem; font-weight:600; color:var(--muted); white-space:nowrap; }
+.prog-track { flex:1; background:var(--border); border-radius:20px; height:5px; overflow:hidden; }
+.prog-fill {
+  height:100%; border-radius:20px;
+  background:linear-gradient(90deg,var(--purple),var(--teal));
+  width:0%; transition:width .8s cubic-bezier(.4,0,.2,1);
+}
+.prog-steps { display:flex; gap:.5rem; flex-wrap:wrap; }
+.prog-step {
+  font-size:.65rem; font-weight:600; padding:.2rem .55rem;
+  border-radius:20px; background:var(--surface); color:var(--faint);
+  border:1px solid var(--border); transition:all .3s;
+}
+.prog-step.active { background:var(--purple); color:#fff; border-color:var(--purple); }
+.prog-step.done   { background:var(--green-light); color:#065f46; border-color:#a7f3d0; }
+
+/* HERO */
+.lesson-hero {
+  padding:3rem 0 2rem;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:2rem;
+  align-items:center;
+}
+@media(max-width:720px){ .lesson-hero{ grid-template-columns:1fr; } }
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:var(--purple-light); color:var(--purple);
+  font-size:.72rem; font-weight:600;
+  padding:.3rem .9rem; border-radius:40px; margin-bottom:1rem;
+}
+.hero-title {
+  font-family:'Sora',sans-serif;
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  font-weight:800; color:var(--navy); line-height:1.2;
+  margin-bottom:.8rem;
+}
+.hero-title span { color:var(--purple); }
+.hero-desc { font-size:1rem; color:var(--muted); max-width:520px; margin-bottom:1.5rem; }
+.hero-chips { display:flex; flex-wrap:wrap; gap:.5rem; }
+.chip {
+  font-size:.72rem; font-weight:600;
+  padding:.3rem .8rem; border-radius:20px;
+  display:flex; align-items:center; gap:.35rem;
+}
+.chip-purple { background:var(--purple-light); color:var(--purple); }
+.chip-amber  { background:var(--amber-light); color:#92400e; }
+.chip-teal   { background:var(--teal-light); color:var(--teal); }
+
+.hero-visual {
+  position:relative;
+  width:180px; height:180px;
+  flex-shrink:0;
+}
+.hero-ring {
+  position:absolute; inset:0;
+  border-radius:50%;
+  border:2px solid var(--border);
+  animation:spin 20s linear infinite;
+}
+.hero-ring::before {
+  content:''; position:absolute;
+  top:-2px; left:50%;
+  width:10px; height:10px;
+  background:var(--purple); border-radius:50%;
+  transform:translateX(-50%);
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.hero-ring-2 {
+  position:absolute; inset:20px;
+  border-radius:50%;
+  border:2px dashed #cbd5e1;
+  animation:spin 15s linear infinite reverse;
+}
+.hero-center {
+  position:absolute; inset:35px;
+  background:linear-gradient(135deg,var(--purple),var(--navy));
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.5rem;
+  box-shadow:var(--shadow-md);
+}
+.hero-float {
+  position:absolute;
+  background:var(--white); border-radius:var(--radius-sm);
+  box-shadow:var(--shadow-sm); border:1px solid var(--border);
+  font-size:.65rem; font-weight:600; padding:.3rem .6rem;
+  animation:float 3s ease-in-out infinite;
+}
+.hero-float:nth-child(4){ top:5px; right:-10px; animation-delay:0s; }
+.hero-float:nth-child(5){ bottom:15px; left:-10px; animation-delay:1s; }
+.hero-float:nth-child(6){ top:50%; right:-30px; animation-delay:2s; }
+@keyframes float{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-6px); }
+}
+
+/* STATS SECTION */
+.stats-section { padding:0 0 2rem; }
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1rem; }
+.stat-card {
+  background:var(--white); border:1px solid var(--border);
+  border-radius:var(--radius-md); padding:1.2rem;
+  text-align:center;
+  box-shadow:var(--shadow-xs);
+  transition:transform .3s,box-shadow .3s;
+  animation:fadeUp .6s ease backwards;
+}
+.stat-card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-sm); }
+.stat-icon {
+  width:42px; height:42px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.2rem; margin:0 auto .8rem;
+}
+.stat-icon.purple { background:var(--purple-light); }
+.stat-icon.red    { background:var(--red-light); }
+.stat-icon.amber  { background:var(--amber-light); }
+.stat-icon.teal   { background:var(--teal-light); }
+.stat-num {
+  font-family:'Sora',sans-serif;
+  font-size:1.7rem; font-weight:800; color:var(--navy);
+  line-height:1;
+}
+.stat-lbl { font-size:.7rem; color:var(--muted); margin-top:.35rem; }
+
+/* SECTION HEAD */
+.section-head {
+  display:flex; align-items:center; gap:.75rem;
+  margin-bottom:1.25rem;
+}
+.section-head-icon {
+  width:36px; height:36px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center; font-size:1rem;
+}
+.section-head h2 {
+  font-family:'Sora',sans-serif; font-size:1.25rem; font-weight:700; color:var(--navy);
+}
+.section-head p { font-size:.8rem; color:var(--muted); margin-top:.1rem; }
+
+/* CARDS */
+.card {
+  background:var(--white); border:1px solid var(--border);
+  border-radius:var(--radius-lg); padding:1.6rem;
+  box-shadow:var(--shadow-xs);
+  animation:fadeUp .6s ease backwards;
+}
+@keyframes fadeUp{
+  from{ opacity:0; transform:translateY(20px); }
+  to  { opacity:1; transform:translateY(0); }
+}
+
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem; }
+@media(max-width:800px){ .two-col{ grid-template-columns:1fr; } }
+.full-col { margin-bottom:1.25rem; }
+
+/* TACTICS LIST */
+.tactics-list { list-style:none; display:flex; flex-direction:column; gap:.15rem; }
+.tactics-item {
+  display:flex; align-items:flex-start; gap:.9rem;
+  padding:.75rem .9rem; border-radius:var(--radius-sm);
+  border:1px solid transparent;
+  cursor:default;
+  transition:background .2s,border-color .2s,transform .2s;
+}
+.tactics-item:hover {
+  background:var(--purple-light); border-color:#c4b5fd;
+  transform:translateX(4px);
+}
+.tactics-icon {
+  width:28px; height:28px; min-width:28px;
+  background:var(--purple-light); border-radius:7px;
+  display:flex; align-items:center; justify-content:center; font-size:.9rem;
+}
+.tactics-txt strong { font-size:.88rem; color:var(--navy); }
+.tactics-txt span   { font-size:.76rem; color:var(--muted); display:block; margin-top:.1rem; }
+
+/* SCENARIO INTERACTIVE CARD */
+.scenario-card-interactive {
+  background:var(--indigo-light);
+  border-radius:var(--radius-md);
+  padding:1.3rem;
+  margin:1rem 0;
+  border-left:4px solid var(--purple);
+}
+.choice-buttons {
+  display:flex;
+  flex-wrap:wrap;
+  gap:.8rem;
+  margin:1rem 0;
+}
+.choice-btn {
+  flex:1;
+  min-width:150px;
+  background:var(--white);
+  border:2px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:.8rem 1rem;
+  font-size:.85rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+  font-family:'Figtree',sans-serif;
+  text-align:center;
+}
+.choice-btn:hover {
+  border-color:var(--purple);
+  background:var(--purple-light);
+  transform:translateY(-2px);
+}
+.choice-btn.selected-correct {
+  border-color:var(--green);
+  background:var(--green-light);
+}
+.choice-btn.selected-wrong {
+  border-color:var(--red);
+  background:var(--red-light);
+}
+
+/* REAL SCAM BOX */
+.real-scam {
+  background:var(--amber-light);
+  border-radius:var(--radius-sm);
+  padding:1rem;
+  margin:1rem 0;
+  border-left:3px solid var(--amber);
+}
+.real-scam strong { color:#92400e; }
+
+/* TIP GRID */
+.tip-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:.8rem; }
+.tip-card {
+  display:flex; align-items:flex-start; gap:.75rem;
+  padding:.9rem 1rem; border-radius:var(--radius-sm);
+  border:1px solid var(--border); background:var(--surface);
+  transition:all .25s;
+}
+.tip-card:hover { border-color:var(--purple); background:var(--purple-light); transform:translateY(-2px); }
+.tip-icon {
+  width:32px; height:32px; min-width:32px; border-radius:8px;
+  background:var(--purple-light); display:flex; align-items:center; justify-content:center; font-size:1rem;
+}
+.tip-text strong { font-size:.82rem; color:var(--navy); display:block; }
+.tip-text span   { font-size:.72rem; color:var(--muted); }
+
+/* TIP BANNER */
+.tip-banner {
+  display:flex; justify-content:space-between; align-items:center;
+  gap:1rem; padding:.8rem 1.3rem;
+  background:linear-gradient(135deg,var(--amber-light),#fef9c3);
+  border:1px solid #fde68a; border-radius:var(--radius-md);
+  margin-bottom:1.5rem; flex-wrap:wrap;
+}
+.tip-banner span { font-size:.84rem; font-weight:500; color:#78350f; }
+.btn-tip-next {
+  background:transparent; border:1.5px solid #d97706;
+  color:#d97706; padding:.25rem .9rem; border-radius:20px;
+  font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s;
+}
+.btn-tip-next:hover { background:#d97706; color:#fff; }
+
+/* QUIZ STYLES */
+.quiz-question { font-family:'Sora',sans-serif; font-size:.95rem; font-weight:600; margin-bottom:1rem; color:var(--navy); }
+.quiz-options { display:flex; flex-direction:column; gap:.6rem; margin-bottom:1.2rem; }
+.quiz-opt {
+  padding:.85rem 1.1rem; border-radius:var(--radius-sm);
+  border:1.5px solid var(--border); background:var(--white);
+  cursor:pointer; font-size:.88rem; text-align:left;
+  transition:all .2s; font-family:'Figtree',sans-serif;
+  display:flex; align-items:center; gap:.75rem;
+}
+.quiz-opt:hover:not(.answered) { border-color:var(--purple); background:var(--purple-light); }
+.quiz-opt.correct  { border-color:var(--green); background:var(--green-light); }
+.quiz-opt.wrong    { border-color:var(--red);   background:var(--red-light); }
+.quiz-opt::before { content:'○'; color:var(--faint); font-size:1rem; }
+.quiz-opt.correct::before { content:'✓'; color:var(--green); font-weight:700; }
+.quiz-opt.wrong::before   { content:'✗'; color:var(--red); font-weight:700; }
+.quiz-feedback {
+  padding:.8rem 1.1rem; border-radius:var(--radius-sm);
+  font-size:.82rem; display:none; animation:fadeIn .3s;
+}
+.quiz-feedback.ok { background:var(--green-light); border-left:3px solid var(--green); }
+.quiz-feedback.ng { background:var(--red-light);   border-left:3px solid var(--red); }
+.quiz-progress { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; flex-wrap:wrap; gap:.5rem; }
+.quiz-prog-dots { display:flex; gap:.4rem; }
+.quiz-prog-dot { width:8px; height:8px; border-radius:50%; background:var(--border); }
+.quiz-prog-dot.done-ok  { background:var(--green); }
+.quiz-prog-dot.done-ng  { background:var(--red);   }
+.quiz-prog-dot.current  { background:var(--purple); transform:scale(1.3); }
+.quiz-score {
+  text-align:center; padding:1.5rem;
+  background:var(--surface); border-radius:var(--radius-md);
+  border:1px solid var(--border); display:none;
+}
+.score-big { font-family:'Sora',sans-serif; font-size:3rem; font-weight:800; color:var(--purple); }
+.btn-quiz-nav {
+  background:var(--navy); color:#fff; border:none;
+  padding:.65rem 1.5rem; border-radius:40px;
+  font-size:.85rem; font-weight:600; cursor:pointer;
+  font-family:'Figtree',sans-serif; margin-top:1rem;
+}
+.btn-quiz-nav:hover { background:var(--ink); }
+
+/* FEEDBACK */
+.ex-feedback {
+  padding:1rem 1.2rem; border-radius:var(--radius-sm); display:none;
+  font-size:.85rem; animation:fadeIn .35s;
+}
+.ex-feedback.ok { background:var(--green-light); border-left:3px solid var(--green); }
+.ex-feedback.ng { background:var(--red-light);   border-left:3px solid var(--red); }
+
+/* GLOSSARY */
+.glossary-item { border-bottom:1px solid var(--border); }
+.glossary-term {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:.85rem 0; cursor:pointer;
+}
+.glossary-term strong { font-size:.9rem; color:var(--navy); }
+.gloss-icon { font-size:.8rem; color:var(--faint); transition:transform .3s; }
+.glossary-def {
+  font-size:.82rem; color:var(--muted); line-height:1.6;
+  max-height:0; overflow:hidden; transition:max-height .35s ease, padding .3s;
+  padding-bottom:0;
+}
+.glossary-item.open .glossary-def  { max-height:200px; padding-bottom:.9rem; }
+.glossary-item.open .gloss-icon     { transform:rotate(45deg); color:var(--purple); }
+
+/* BADGES */
+.badges-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:.8rem; }
+.badge-item {
+  text-align:center; padding:.9rem .6rem;
+  border-radius:var(--radius-md); border:1px solid var(--border);
+  background:var(--surface);
+  transition:all .3s;
+}
+.badge-item.earned { background:var(--white); border-color:#c4b5fd; box-shadow:var(--shadow-xs); }
+.badge-item.locked { filter:grayscale(1); opacity:.45; }
+.badge-emoji { font-size:2rem; margin-bottom:.4rem; }
+.badge-name { font-size:.72rem; font-weight:700; color:var(--navy); margin-bottom:.15rem; }
+.badge-desc { font-size:.65rem; color:var(--muted); }
+
+/* NAV BUTTONS */
+.page-nav {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:1.5rem 0 2rem; gap:1rem; flex-wrap:wrap;
+}
+.btn-reset {
+  background:var(--white); border:1.5px solid var(--border);
+  color:var(--muted); padding:.7rem 1.6rem; border-radius:40px;
+  font-size:.85rem; font-weight:600; cursor:pointer;
+  font-family:'Figtree',sans-serif;
+}
+.btn-reset:hover { border-color:var(--red); color:var(--red); }
+.btn-next {
+  background:var(--navy); color:#fff; border:none;
+  padding:.8rem 2rem; border-radius:40px;
+  font-size:.88rem; font-weight:600; cursor:pointer;
+  font-family:'Figtree',sans-serif;
+  display:flex; align-items:center; gap:.6rem;
+}
+.btn-next:hover:not(:disabled) { background:var(--ink); transform:translateY(-2px); box-shadow:var(--shadow-sm); }
+.btn-next:disabled { opacity:.4; cursor:not-allowed; }
+
+footer {
+  background:var(--white); border-top:1px solid var(--border);
+  padding:1.5rem; text-align:center; font-size:.72rem; color:var(--faint);
+}
+@keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+@media(max-width:600px){
+  .header-inner{ flex-wrap:wrap; }
+  .header-meta{ flex-wrap:wrap; gap:.5rem; }
+  .lesson-hero{ padding:1.5rem 0 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <div class="logo-shield">🛡️</div>
+      <div class="logo-text">
+        <h1>Parry Security</h1>
+        <p>Your Digital Shield – Empowering Safe Online Choices</p>
+      </div>
+    </a>
+    <div class="header-meta">
+      <span class="lesson-badge">📘 Module 2</span>
+      <span class="reading-time">⏱ 10 min read</span>
+      <div id="authArea"></div>
+    </div>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-strip">
+  <div class="prog-inner">
+    <span class="prog-label">Progress</span>
+    <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+    <span class="prog-label" id="progPct">0%</span>
+    <div class="prog-steps">
+      <span class="prog-step" id="st1">L1</span>
+      <span class="prog-step active" id="st2">L2</span>
+      <span class="prog-step" id="st3">L3</span>
+      <span class="prog-step" id="st4">L4</span>
+      <span class="prog-step" id="st5">L5</span>
+      <span class="prog-step" id="st6">L6</span>
+      <span class="prog-step" id="stQ">Quiz</span>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding-top:0">
+
+<!-- HERO -->
+<div class="lesson-hero">
+  <div>
+    <div class="hero-eyebrow">🎭 Lesson 2 of 6</div>
+    <h1 class="hero-title">Social Engineering &<br><span>Impersonation</span></h1>
+    <p class="hero-desc">Attackers don't hack systems — they hack humans. Learn how manipulators exploit trust, fear, and urgency to steal your information, and build your psychological defence.</p>
+    <div class="hero-chips">
+      <span class="chip chip-purple">🧠 Human Hacking</span>
+      <span class="chip chip-amber">⚠️ High Risk Vector</span>
+      <span class="chip chip-teal">🎭 6 Attack Types</span>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-ring"></div>
+    <div class="hero-ring-2"></div>
+    <div class="hero-center">🎭</div>
+    <div class="hero-float">😈 Impersonator</div>
+    <div class="hero-float">📞 Fake Call</div>
+    <div class="hero-float">📧 Phishing</div>
+  </div>
+</div>
+
+<!-- TIP BANNER -->
+<div class="tip-banner">
+  <span id="tipText">💡 Social engineers exploit urgency and authority — always verify independently.</span>
+  <button class="btn-tip-next" id="tipNext">Next Tip →</button>
+</div>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-card" style="animation-delay:.0s">
+      <div class="stat-icon purple">🎭</div>
+      <div class="stat-num" data-counter="98" data-suffix="%">0%</div>
+      <div class="stat-lbl">of attacks involve social engineering</div>
+    </div>
+    <div class="stat-card" style="animation-delay:.1s">
+      <div class="stat-icon red">💰</div>
+      <div class="stat-num" data-counter="48" data-suffix="B">$0B</div>
+      <div class="stat-lbl">Annual global losses</div>
+    </div>
+    <div class="stat-card" style="animation-delay:.2s">
+      <div class="stat-icon amber">⏱️</div>
+      <div class="stat-num" data-counter="78" data-suffix="%">0%</div>
+      <div class="stat-lbl">of employees take bait</div>
+    </div>
+    <div class="stat-card" style="animation-delay:.3s">
+      <div class="stat-icon teal">🔊</div>
+      <div class="stat-num" data-counter="82" data-suffix="%">0%</div>
+      <div class="stat-lbl">AI voice cloning accuracy</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN GRID ROW 1 -->
+<div class="two-col">
+
+  <!-- What is Social Engineering? -->
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--purple-light)">🧠</div>
+      <div>
+        <h2>What is Social Engineering?</h2>
+        <p>Psychological manipulation, not technical hacking</p>
+      </div>
+    </div>
+    <p style="font-size:.88rem; color:var(--muted); margin-bottom:1rem;">
+      Social engineering is the art of manipulating people into breaking standard security procedures or revealing confidential information. Attackers exploit <strong>trust, fear, curiosity, and urgency</strong> — not software vulnerabilities.
+    </p>
+    <p style="font-size:.88rem; color:var(--muted); margin-bottom:1rem;">
+      Instead of hacking your password, they hack <strong>you</strong> into giving it away voluntarily. The most sophisticated security systems mean nothing if a human can be tricked.
+    </p>
+    <div class="real-scam">
+      <strong>📰 Parry Security Case Study</strong>
+      <p style="font-size:.78rem; margin-top:.4rem;">An employee received a call from "the CEO" using AI voice cloning, asking to transfer $50,000 urgently. The employee followed protocol — called back on the official number — and stopped the fraud. <strong>Always verify through a separate channel.</strong></p>
+    </div>
+  </div>
+
+  <!-- Common Tactics -->
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--red-light)">⚠️</div>
+      <div>
+        <h2>Common Attack Tactics</h2>
+        <p>How attackers manipulate you</p>
+      </div>
+    </div>
+    <ul class="tactics-list">
+      <li class="tactics-item">
+        <div class="tactics-icon">🎭</div>
+        <div class="tactics-txt">
+          <strong>Impersonation / Pretexting</strong>
+          <span>Fake IT support, bank officials, government agents — creating a fake scenario to extract info</span>
+        </div>
+      </li>
+      <li class="tactics-item">
+        <div class="tactics-icon">👥</div>
+        <div class="tactics-txt">
+          <strong>Quid Pro Quo</strong>
+          <span>"I'll fix your computer, just give me remote access" — offering a fake service for access</span>
+        </div>
+      </li>
+      <li class="tactics-item">
+        <div class="tactics-icon">📞</div>
+        <div class="tactics-txt">
+          <strong>Vishing (Voice Phishing)</strong>
+          <span>Phone calls pretending to be from banks, police, or tech support to steal OTPs</span>
+        </div>
+      </li>
+      <li class="tactics-item">
+        <div class="tactics-icon">📱</div>
+        <div class="tactics-txt">
+          <strong>Smishing (SMS Phishing)</strong>
+          <span>Fake parcel delivery texts, bank alerts, or prize notifications via SMS</span>
+        </div>
+      </li>
+      <li class="tactics-item">
+        <div class="tactics-icon">🎣</div>
+        <div class="tactics-txt">
+          <strong>Baiting</strong>
+          <span>Leaving infected USB drives in parking lots — curiosity leads to infection</span>
+        </div>
+      </li>
+      <li class="tactics-item">
+        <div class="tactics-icon">🚪</div>
+        <div class="tactics-txt">
+          <strong>Tailgating / Piggybacking</strong>
+          <span>Following someone into a secure area by pretending to have forgotten a badge</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- INTERACTIVE SCENARIO -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--amber-light)">🎯</div>
+      <div>
+        <h2>Interactive: Choose the Safest Response</h2>
+        <p>Test your judgement against real social engineering scenarios</p>
+      </div>
+    </div>
+
+    <div class="scenario-card-interactive" id="scenario1">
+      <strong>📞 SCENARIO 1: The Urgent Bank Call</strong>
+      <p style="margin-top:.5rem; font-size:.85rem;">You receive a call from "Fraud Department at Chase Bank": "Your account has been compromised from New York. We need the OTP sent to your phone to block the transaction. Do it now or you'll lose everything!"</p>
+      <div class="choice-buttons" id="choices1">
+        <button class="choice-btn" data-scenario="1" data-choice="a">A) Give them the OTP immediately</button>
+        <button class="choice-btn" data-scenario="1" data-choice="b">B) Hang up and call the bank using the number on your card</button>
+        <button class="choice-btn" data-scenario="1" data-choice="c">C) Ask them to prove they're from the bank first</button>
+        <button class="choice-btn" data-scenario="1" data-choice="d">D) Ignore and do nothing — this happens often</button>
+      </div>
+    </div>
+
+    <div class="scenario-card-interactive" id="scenario2" style="display:none;">
+      <strong>👤 SCENARIO 2: The "Help Desk" Call</strong>
+      <p style="margin-top:.5rem; font-size:.85rem;">"Hi, this is John from Microsoft IT Support. We've detected multiple viruses from your IP address. I need remote access to your computer to remove them immediately, or your files will be encrypted."</p>
+      <div class="choice-buttons" id="choices2">
+        <button class="choice-btn" data-scenario="2" data-choice="a">A) Grant remote access to protect your files</button>
+        <button class="choice-btn" data-scenario="2" data-choice="b">B) Ask for their employee ID and department</button>
+        <button class="choice-btn" data-scenario="2" data-choice="c">C) Hang up — Microsoft never makes unsolicited support calls</button>
+        <button class="choice-btn" data-scenario="2" data-choice="d">D) Tell them your computer is fine and ignore</button>
+      </div>
+    </div>
+
+    <div class="scenario-card-interactive" id="scenario3" style="display:none;">
+      <strong>📧 SCENARIO 3: The Friend-in-Distress</strong>
+      <p style="margin-top:.5rem; font-size:.85rem;">You get a Facebook message from your "friend Sarah": "Hey, I'm stuck in Romania, my wallet was stolen. Can you send $500 via Western Union? I'll pay you back tomorrow — I'm desperate!"</p>
+      <div class="choice-buttons" id="choices3">
+        <button class="choice-btn" data-scenario="3" data-choice="a">A) Send the money immediately to help your friend</button>
+        <button class="choice-btn" data-scenario="3" data-choice="b">B) Ask a personal question only Sarah would know</button>
+        <button class="choice-btn" data-scenario="3" data-choice="c">C) Call Sarah using her known phone number to verify</button>
+        <button class="choice-btn" data-scenario="3" data-choice="d">D) Decline but offer to help in other ways</button>
+      </div>
+    </div>
+
+    <div id="scenarioFeedback" class="ex-feedback" style="display:none;"></div>
+    <div style="display:flex; justify-content:space-between; margin-top:1rem;">
+      <button id="prevScenario" class="btn-quiz-nav" style="background:var(--surface); color:var(--ink);" disabled>← Previous</button>
+      <span id="scenarioCounter" style="font-size:.75rem; color:var(--muted);">Scenario 1 of 3</span>
+      <button id="nextScenario" class="btn-quiz-nav" style="background:var(--surface); color:var(--ink);">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROTECTION TIPS -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--green-light)">🛡️</div>
+      <div>
+        <h2>How to Defend Against Social Engineering</h2>
+        <p>The Parry Security "Verify First" Protocol</p>
+      </div>
+    </div>
+    <div class="tip-grid">
+      <div class="tip-card">
+        <div class="tip-icon">🛑</div>
+        <div class="tip-text">
+          <strong>STOP – Don't act on urgency</strong>
+          <span>Scammers create panic to bypass your logic</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🤔</div>
+        <div class="tip-text">
+          <strong>THINK – Does this make sense?</strong>
+          <span>Would a bank call asking for OTP? No.</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📞</div>
+        <div class="tip-text">
+          <strong>VERIFY – Use a separate channel</strong>
+          <span>Call back using a known official number</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🚨</div>
+        <div class="tip-text">
+          <strong>REPORT – Tell your security team</strong>
+          <span>Reporting helps protect everyone</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🔐</div>
+        <div class="tip-text">
+          <strong>Never share OTPs or passwords</strong>
+          <span>No legitimate entity will ask for them</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">👥</div>
+        <div class="tip-text">
+          <strong>Establish verification codes</strong>
+          <span>Create a family/business code word</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KNOWLEDGE QUIZ -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--indigo-light)">🧩</div>
+      <div>
+        <h2>Knowledge Check</h2>
+        <p>Test what you've learned — 4 questions</p>
+      </div>
+    </div>
+    <div id="quizArea">
+      <div class="quiz-progress">
+        <div class="quiz-prog-dots" id="quizDots"></div>
+        <span id="quizCounter" style="font-size:.76rem; color:var(--muted)">Question 1 of 4</span>
+      </div>
+      <div class="quiz-question" id="quizQ"></div>
+      <div class="quiz-options" id="quizOpts"></div>
+      <div class="quiz-feedback" id="quizFb"></div>
+      <button class="btn-quiz-nav" id="quizNextBtn" style="display:none"></button>
+    </div>
+    <div class="quiz-score" id="quizScore">
+      <div class="score-big" id="scoreBig"></div>
+      <h3 id="scoreTitle"></h3>
+      <p id="scoreDesc" style="font-size:.85rem; color:var(--muted); margin:.5rem 0 1rem"></p>
+      <button class="btn-quiz-nav" id="retryBtn">↩ Retry Quiz</button>
+    </div>
+  </div>
+</div>
+
+<!-- GLOSSARY -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--surface)">📚</div>
+      <div>
+        <h2>Glossary of Terms</h2>
+        <p>Key social engineering concepts — click to expand</p>
+      </div>
+    </div>
+    <div id="glossary">
+      <div class="glossary-item"><div class="glossary-term"><strong>Social Engineering</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Psychological manipulation of people into performing actions or divulging confidential information. Exploits trust, fear, and urgency rather than technical vulnerabilities.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Pretexting</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Creating a fabricated scenario (pretext) to trick someone into revealing information. Often involves impersonating authority figures like IT support or bank managers.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Vishing (Voice Phishing)</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Phone-based social engineering where attackers call victims pretending to be legitimate organisations to extract sensitive information like OTPs or card numbers.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Smishing (SMS Phishing)</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Phishing conducted via text message. Common examples include fake parcel delivery alerts, bank fraud warnings, or prize scams with malicious links.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Quid Pro Quo</strong><span class="gloss-icon">+</span></div><div class="glossary-def">"Something for something" — attackers offer a fake service (like tech support) in exchange for sensitive information or access.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>AI Voice Cloning</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Using artificial intelligence to replicate someone's voice from short audio samples, making impersonation attacks extremely convincing.</div></div>
+      <div class="glossary-item"><div class="glossary-term"><strong>Tailgating / Piggybacking</strong><span class="gloss-icon">+</span></div><div class="glossary-def">Physical social engineering where an unauthorised person follows an authorised person into a secure area, often by claiming to have forgotten their badge.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div class="full-col">
+  <div class="card">
+    <div class="section-head">
+      <div class="section-head-icon" style="background:var(--amber-light)">🏆</div>
+      <div>
+        <h2>Achievements</h2>
+        <p>Unlock badges as you progress through the lesson</p>
+      </div>
+    </div>
+    <div class="badges-grid" id="badgesGrid">
+      <div class="badge-item locked" id="badge1"><div class="badge-emoji">🎭</div><div class="badge-name">Tactic Spotter</div><div class="badge-desc">Complete scenario 1</div></div>
+      <div class="badge-item locked" id="badge2"><div class="badge-emoji">🧠</div><div class="badge-name">Quiz Master</div><div class="badge-desc">Score 3/4 or above in the quiz</div></div>
+      <div class="badge-item locked" id="badge3"><div class="badge-emoji">🛡️</div><div class="badge-name">Verify First</div><div class="badge-desc">Complete all 3 scenarios</div></div>
+      <div class="badge-item locked" id="badge4"><div class="badge-emoji">📚</div><div class="badge-name">Glossary Expert</div><div class="badge-desc">Open all glossary terms</div></div>
+      <div class="badge-item locked" id="badge5"><div class="badge-emoji">🏆</div><div class="badge-name">Lesson Champion</div><div class="badge-desc">Complete Lesson 2 fully</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE NAV -->
+<div class="page-nav">
+  <button class="btn-reset" id="resetBtn">↺ Reset Lesson</button>
+  <button class="btn-next" id="nextBtn" disabled>
+    Next: Lesson 3 (Risky Behaviour) <span class="arrow">→</span>
+  </button>
+</div>
+
+</div><!-- /container -->
+
+<footer>🛡️ Parry Security – Cyber Safety Training &nbsp;|&nbsp; Lesson 2: Social Engineering & Impersonation &nbsp;|&nbsp; Always verify before trusting.</footer>
+
+<script>
+// STATE
+let lesson2Completed = false;
+let scenariosCompleted = {1:false,2:false,3:false};
+let currentScenario = 1;
+let quizScore = 0;
+let qResults = [];
+
+// AUTH
+function renderAuth(){
+  const el = document.getElementById('authArea');
+  const u = (() => { try{ return JSON.parse(localStorage.getItem('parryCurrentUser')); } catch(e){ return null; } })();
+  if(u){
+    const n = u.fullName.split(' ')[0];
+    el.innerHTML = `<div class="user-pill"><div class="user-avatar">${n[0].toUpperCase()}</div><span class="user-name">${n}</span><button class="btn-auth btn-out" onclick="doLogout()">Logout</button></div>`;
+  } else {
+    el.innerHTML = `<a href="login.html" class="btn-auth btn-ghost">Login</a><a href="index.html" class="btn-auth btn-solid">Sign Up</a>`;
+  }
+}
+function doLogout(){ localStorage.removeItem('parryCurrentUser'); location.reload(); }
+
+// PROGRESS & LESSON COMPLETE
+function updateProgress(pct, done){
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progPct').textContent = pct + '%';
+  if(done){
+    const s2 = document.getElementById('st2');
+    s2.textContent = '✓ L2';
+    s2.classList.remove('active'); s2.classList.add('done');
+    document.getElementById('nextBtn').disabled = false;
+    earnBadge('badge5');
+    localStorage.setItem('parryLesson2Completed','true');
+  }
+}
+
+function checkLessonComplete(){
+  if(scenariosCompleted[1] && scenariosCompleted[2] && scenariosCompleted[3] && !lesson2Completed){
+    lesson2Completed = true;
+    updateProgress(30, true);
+  }
+}
+
+// SCENARIO HANDLER
+function showScenario(n){
+  document.querySelectorAll('.scenario-card-interactive').forEach((el,idx) => {
+    el.style.display = idx+1 === n ? 'block' : 'none';
+  });
+  document.getElementById('scenarioCounter').textContent = `Scenario ${n} of 3`;
+  document.getElementById('prevScenario').disabled = n === 1;
+  document.getElementById('nextScenario').disabled = n === 3;
+  currentScenario = n;
+}
+
+function handleScenarioChoice(scenarioNum, choice, isCorrect, feedbackMsg){
+  if(scenariosCompleted[scenarioNum]) return;
+  const container = document.getElementById(`scenario${scenarioNum}`);
+  const btns = container.querySelectorAll('.choice-btn');
+  btns.forEach(btn => {
+    btn.disabled = true;
+    if(btn.dataset.choice === choice){
+      btn.classList.add(isCorrect ? 'selected-correct' : 'selected-wrong');
+    }
+  });
+  const fb = document.getElementById('scenarioFeedback');
+  fb.style.display = 'block';
+  fb.className = 'ex-feedback ' + (isCorrect ? 'ok' : 'ng');
+  fb.innerHTML = feedbackMsg;
+  scenariosCompleted[scenarioNum] = true;
+  if(isCorrect) earnBadge('badge1');
+  if(scenariosCompleted[1] && scenariosCompleted[2] && scenariosCompleted[3]) earnBadge('badge3');
+  checkLessonComplete();
+}
+
+// Scenario 1 choices
+document.querySelectorAll('#choices1 .choice-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const choice = btn.dataset.choice;
+    if(choice === 'b'){
+      handleScenarioChoice(1, 'b', true, '✅ CORRECT! Banks never call asking for OTPs. Always hang up and call the official number on your card. Urgency is a manipulation tactic — legitimate institutions will never threaten to "lock" your account instantly.');
+    } else {
+      const wrongMsg = choice === 'a' ? '❌ INCORRECT! Never share OTPs with anyone — not even "bank officials". That OTP gives full access to your account.' : (choice === 'c' ? '⚠️ Asking for proof is good, but skilled scammers will lie convincingly. Always call the official number directly.' : '⚠️ Ignoring might miss a real issue. Best: call the official bank number to verify.');
+      handleScenarioChoice(1, choice, false, wrongMsg);
+    }
+  });
+});
+
+// Scenario 2 choices
+document.querySelectorAll('#choices2 .choice-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const choice = btn.dataset.choice;
+    if(choice === 'c'){
+      handleScenarioChoice(2, 'c', true, '✅ CORRECT! Microsoft, Apple, and other tech companies NEVER make unsolicited support calls. This is a classic vishing scam to install ransomware or steal data.');
+    } else {
+      const wrongMsg = choice === 'a' ? '❌ DANGEROUS! Granting remote access gives attackers complete control of your computer.' : (choice === 'b' ? '⚠️ Scammers can fake IDs. Hang up and call the official support number.' : '⚠️ Ignoring doesn\'t stop the scammer from calling again. Best: Hang up immediately.');
+      handleScenarioChoice(2, choice, false, wrongMsg);
+    }
+  });
+});
+
+// Scenario 3 choices
+document.querySelectorAll('#choices3 .choice-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const choice = btn.dataset.choice;
+    if(choice === 'c'){
+      handleScenarioChoice(3, 'c', true, '✅ CORRECT! Calling your friend directly using a known number is the only way to verify. Friend-in-distress scams are extremely common — they hack social media accounts and message everyone on the friend list.');
+    } else {
+      const wrongMsg = choice === 'a' ? '❌ Never send money to unsolicited requests. Hackers often take over accounts to run this scam.' : (choice === 'b' ? '⚠️ Good instinct, but better to call them directly on a known number.' : '⚠️ Declining is safe, but verifying protects your friend from future scams too.');
+      handleScenarioChoice(3, choice, false, wrongMsg);
+    }
+  });
+});
+
+// Scenario navigation
+document.getElementById('prevScenario').addEventListener('click', () => {
+  if(currentScenario > 1) showScenario(currentScenario - 1);
+});
+document.getElementById('nextScenario').addEventListener('click', () => {
+  if(currentScenario < 3) showScenario(currentScenario + 1);
+});
+
+// QUIZ
+const questions = [
+  { q:'What is the primary difference between social engineering and technical hacking?', opts:['Social engineering is faster','Social engineering exploits human psychology, not software','Social engineering requires more skill','There is no difference'], answer:1, explanation:'Social engineering targets human vulnerabilities — trust, fear, and urgency — rather than technical system flaws.' },
+  { q:'You get a call from "the IT department" asking for your password to fix a server issue. What should you do?', opts:['Give them your password — they need to fix the issue','Ask for their manager and then give the password','Tell them you\'ll call back using the official IT number','Give a fake password to test them'], answer:2, explanation:'No legitimate IT department will ever ask for your password. Always verify by calling back using a known official number.' },
+  { q:'Which of these is a common "pretext" used in social engineering?', opts:['"Your computer has a virus"','"You won a free prize"','"Your bank account is compromised"','All of the above'], answer:3, explanation:'Attackers use many pretexts — tech support, prize winnings, bank fraud, package delivery — all designed to create urgency and bypass your judgement.' },
+  { q:'What is "vishing"?', opts:['Phishing via email','Phishing via SMS text','Phishing via phone call','Phishing via social media DMs'], answer:2, explanation:'Vishing = Voice phishing. Phone calls are particularly effective because scammers can create urgency and authority through tone and pressure tactics.' }
+];
+
+let qIdx = 0;
+let answered = false;
+
+function renderQuizDots(){
+  const el = document.getElementById('quizDots');
+  el.innerHTML = '';
+  questions.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'quiz-prog-dot';
+    if(i < qResults.length){ d.className += qResults[i] ? ' done-ok' : ' done-ng'; }
+    else if(i === qIdx){ d.className += ' current'; }
+    el.appendChild(d);
+  });
+}
+
+function renderQuestion(){
+  const q = questions[qIdx];
+  document.getElementById('quizCounter').textContent = `Question ${qIdx+1} of ${questions.length}`;
+  document.getElementById('quizQ').textContent = q.q;
+  const optsEl = document.getElementById('quizOpts');
+  optsEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => checkAnswer(i));
+    optsEl.appendChild(btn);
+  });
+  document.getElementById('quizFb').style.display = 'none';
+  document.getElementById('quizNextBtn').style.display = 'none';
+  answered = false;
+  renderQuizDots();
+}
+
+function checkAnswer(i){
+  if(answered) return;
+  answered = true;
+  const q = questions[qIdx];
+  const opts = document.querySelectorAll('.quiz-opt');
+  const correct = i === q.answer;
+  opts.forEach((o,idx) => {
+    o.classList.add('answered');
+    if(idx === q.answer) o.classList.add('correct');
+    else if(idx === i && !correct) o.classList.add('wrong');
+  });
+  const fb = document.getElementById('quizFb');
+  fb.style.display = 'block';
+  fb.className = 'quiz-feedback ' + (correct ? 'ok' : 'ng');
+  fb.innerHTML = `<strong>${correct ? '✅ Correct!' : '❌ Incorrect.'}</strong> ${q.explanation}`;
+  if(correct) quizScore++;
+  qResults.push(correct);
+  renderQuizDots();
+  const nb = document.getElementById('quizNextBtn');
+  nb.style.display = 'block';
+  nb.textContent = qIdx < questions.length-1 ? 'Next Question →' : 'See My Score →';
+}
+
+document.getElementById('quizNextBtn').addEventListener('click', () => {
+  qIdx++;
+  if(qIdx < questions.length){ renderQuestion(); }
+  else { showScore(); }
+});
+
+function showScore(){
+  document.getElementById('quizArea').style.display = 'none';
+  const scoreEl = document.getElementById('quizScore');
+  scoreEl.style.display = 'block';
+  document.getElementById('scoreBig').textContent = `${quizScore}/${questions.length}`;
+  if(quizScore >= 3){ earnBadge('badge2'); }
+  const titles = ['Keep Studying!','Good Effort!','Well Done!','Security Expert! 🏆'];
+  document.getElementById('scoreTitle').textContent = titles[quizScore] || 'Well Done!';
+  document.getElementById('scoreDesc').textContent = quizScore >= 3 ? 'Great job! You understand social engineering threats. Ready for Lesson 3!' : 'Review the scenarios and try again — social engineering is about recognising manipulation patterns.';
+}
+
+document.getElementById('retryBtn').addEventListener('click', () => {
+  qIdx = 0; qResults = []; quizScore = 0; answered = false;
+  document.getElementById('quizScore').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'block';
+  renderQuestion();
+});
+
+// GLOSSARY
+document.querySelectorAll('.glossary-term').forEach(term => {
+  term.addEventListener('click', () => {
+    const item = term.parentElement;
+    const wasOpen = item.classList.contains('open');
+    if(!wasOpen) earnBadge('badge4');
+    document.querySelectorAll('.glossary-item').forEach(i => i.classList.remove('open'));
+    if(!wasOpen) item.classList.add('open');
+  });
+});
+
+// BADGES
+let earnedBadges = [];
+function earnBadge(id){
+  if(earnedBadges.includes(id)) return;
+  earnedBadges.push(id);
+  const el = document.getElementById(id);
+  if(el){
+    el.classList.remove('locked');
+    el.classList.add('earned');
+    el.animate([{transform:'scale(1)'},{transform:'scale(1.2)'},{transform:'scale(1)'}], {duration:400});
+  }
+  localStorage.setItem('parryBadges2', JSON.stringify(earnedBadges));
+}
+
+// RESET
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if(confirm('Reset all Lesson 2 progress?')){
+    localStorage.removeItem('parryLesson2Completed');
+    localStorage.removeItem('parryBadges2');
+    location.reload();
+  }
+});
+
+// NEXT
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if(lesson2Completed) window.location.href = 'lesson3.html';
+});
+
+// TIPS
+const tips = ['💡 Social engineers exploit urgency and authority — always verify independently.','💡 "Too good to be true" offers are always bait — nobody gives away free money.','💡 Caller ID can be spoofed — never trust incoming calls.','💡 Create a family/business code word to verify identity in emergencies.','💡 If someone creates panic or demands secrecy — it\'s a manipulation tactic.','💡 Legitimate organisations never ask for OTPs or passwords over the phone.'];
+let tipI = 0;
+function nextTip(){
+  tipI = (tipI + 1) % tips.length;
+  const el = document.getElementById('tipText');
+  el.style.opacity = 0;
+  setTimeout(() => { el.textContent = tips[tipI]; el.style.opacity = 1; }, 250);
+}
+document.getElementById('tipNext').addEventListener('click', nextTip);
+setInterval(nextTip, 10000);
+
+// STATS COUNTERS
+function animateCounters(){
+  document.querySelectorAll('[data-counter]').forEach(el => {
+    const target = +el.dataset.counter;
+    const suffix = el.dataset.suffix || '';
+    let start = 0;
+    const dur = 1800;
+    const step = 16;
+    const inc = target / (dur / step);
+    const timer = setInterval(() => {
+      start = Math.min(start + inc, target);
+      el.textContent = Math.round(start).toLocaleString() + suffix;
+      if(start >= target) clearInterval(timer);
+    }, step);
+  });
+}
+
+// INIT
+function loadSavedProgress(){
+  if(localStorage.getItem('parryLesson2Completed') === 'true'){
+    lesson2Completed = true;
+    updateProgress(30, true);
+  }
+  const saved = JSON.parse(localStorage.getItem('parryBadges2') || '[]');
+  saved.forEach(id => { if(!earnedBadges.includes(id)) earnBadge(id); });
+}
+
+renderAuth();
+loadSavedProgress();
+showScenario(1);
+renderQuestion();
+setTimeout(animateCounters, 400);
+
+// Scroll animations
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.style.animationPlayState = 'running'; observer.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.card, .stat-card').forEach(el => {
+  el.style.animationPlayState = 'paused';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
