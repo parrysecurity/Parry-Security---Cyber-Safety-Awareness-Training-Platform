@@ -8,7 +8,7 @@
  
 > **An interactive, self-paced cyber security training platform with 6 comprehensive modules, gamified assessments, and professional certification.**
  
-[Live Demo](#) • [Report Bug](#) • [Request Feature](#)
+[Live Demo](https://training.parrysecurity.online/) • [Report Bug](#) • [Request Feature](#)
  
 ---
  
