@@ -11,7 +11,8 @@
 [Live Demo](https://training.parrysecurity.online/) • [Report Bug](#) • [Request Feature](#)
  
 ---
- 
+ <img width="1536" height="1024" alt="ChatGPT Image May 12, 2026, 01_33_02 PM" src="https://github.com/user-attachments/assets/38dfc6d1-801f-4b66-97df-d2e2b7c9ef03" />
+
 ## 📋 Table of Contents
  
 - [About The Project](#-about-the-project)
